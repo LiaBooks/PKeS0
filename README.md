@@ -79,7 +79,7 @@ Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocon
 
 **PKeS:**
 * [Datenblatt](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
-* [Schaltbelegungsplan](./materials/robubot_stud.pdf) 
+* [Schaltbelegungsplan](https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf) 
 
 # Aufgabe 0
 
