@@ -12,22 +12,44 @@ narrator:  Deutsch Female
 
 -->
 
-# Einführung eLab
+# Einführung
 
 --{{1}}--
-In diesem Kurs soll das eLearning-System *eLab* vorgestellt werden. Studenten, die die Vorlesung *Prinzipien und Komponenten eingebetteter Systeme* hören, werden es zur Bearbeitung der praktischen Aufgaben benutzen. 
-
+Willkommen bei dem eLearning-System *eLab*! Es wird euch bei der Bearbeitung der praktischen Aufgaben zur Vorlesung *Prinzipien und Komponenten eingebetteter Systeme* unterstützen. 
 
 --{{2}}--
-Zunächst sollen anhand einer einfachen Aufgabe (An-/Ausschalten einer LED) verschiedene Komponenten der Vorlesung eingeführt werden.
+Um zunächst einen Eindruck von dem System, sowie dem damit verbundenen Arbeitsablauf, zu bekommen, sollt ihr in dieser *nullten* Aufgabe das *Hello World*-Programm der eingebetteten Programmierung implementieren; das An- und Ausschalten einer LED.
+
+## Themen und Ziele
+
+--{{1}}--
+Während der Bearbeitung der Aufgabe sollen verschiedene Themen zur Programmierung eingebetteter Systeme angesprochen werden. 
+
+--{{2}}--
+Wesentlich für den weiteren Verlauf der Vorlesung ist, dass ihr den Mikrocontroller, AVR ATmega32U4, kennenlernt. Dieser wird während der Aufgaben zu programmieren sein. 
+
+--{{3}}-- 
+Zur Programmierung selbst steht in dem eLearning-System eine einfache IDE bereit. Schon zur Bearbeitung dieser Aufgabe werdet ihr diese Nutzen.
+
+--{{4}}--
+Eines der Ziele dieser Aufgabe ist es, eine LED an dem Roboter zum Blinken zu bringen. Neben dem Wissen über den Mikrocontroller selbst, sollt ihr dazu den Schaltbelegungsplan studieren. So könnt ihr herausfinden, wie periphäre Komponenten, also Sensorik und Aktorik, an den Mikrocontroller angeschlossen ist.
+
+--{{5}}--
+Da die Programmierung eingebetteter Systeme, wie auch bei der Anwendungsprogrammierung, zuweilen das Aufspüren und Beseitigen von Fehlern in der Implementierung beinhaltet, werdet ihr das Framework *Arduinoview* benutzen um Daten/Zustände des Mikrocontrollers zu visualisieren und Funktionalitäten ein- und auszuschalten.
 
 **Themen:**
 
-1. Der Mikrocontroller [AVR ATmega32U4](http://www.microchip.com/wwwproducts/en/ATmega32u4), der während der Vorlesung programmiert wird.
-2. Der Anschluss der Peripherie, d.h Sensorik und Aktorik, an den Mikrocontroller.
-3. Das eLearning System über das, u.a., der Roboter/Mikrocontroller programmiert und angesteuert wird.
+* Der Mikrocontroller [AVR ATmega32U4](http://www.microchip.com/wwwproducts/en/ATmega32u4).
+* Programmierung des Mikrocontrollers über das eLearning-System.
+* Der Anschluss der Peripherie, d.h Sensorik und Aktorik, an den Mikrocontroller.
+* Das Framework [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
 
-
+**Ziel(e):**
+* Kennenlernen des Arbeitsablaufs: 
+  * Recherchieren der nötigen Informationen zur Bearbeitung einer Aufgabe. Welche Dokumente sind relevant? 
+  * Einarbeiten in die Programmierung des Systems. Wo finde ich Hilfe und Erklärungen zu Bibliotheken und Funktionen?
+  * Implementieren der Lösung entsprechend der Recherchierten Informationen. Wie funktioniert der Kompilierungs-, Assemblierungs- und Linkprozess für eingebettete Systeme?
+  
 ## Weitere Informationen
 
 --{{1}}--
@@ -37,44 +59,32 @@ Da im Bereich der Programmierung eingebetteter Systeme die Programmiersprache C/
 --{{2}}--
 Im speziellen sind Bitoperationen zur Bearbeitung der *nullten* Aufgabe, aber auch zur Programmierung von Mikrocontrollern im allgemeinen, hilfreich.
 
-**Zusätzliche Hilfsmittel:**
+--{{3}}--
+Für Interessierte gibt es darüber hinaus auch Tutorials, die direkt auf die Programmierung eingebetteter Systeme eingehen.
+
+
+--{{4}}--
+Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocontrollers, als auch den Schaltbelegungsplan studieren.
+
+**C/C++:**
 
 * [Tutorials](http://www.learncpp.com/), [Bücher](https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list) oder [Videos](https://www.youtube.com/watch?v=Rub-JsjMhWY) zu [C](https://en.wikipedia.org/wiki/C_%28programming_language%29)/[C++](https://en.wikipedia.org/wiki/C%2B%2B)
 * [Bitoperationen](https://de.wikipedia.org/wiki/Bitweiser_Operator)
 
-# Aufgabe 0
-
---{{1}}--
-In der ersten praktischen Aufgabe sollen zwei verschiedene Aspekte fokusiert werden. Zum einen soll die hardwarenahe Programmierung des Mikrocontrollers AVR ATmega32U4 eingeführt werden. Zum anderen soll Arduinoview als Framework zur Visualisierung von Daten und Zuständen des eingebetteten Systems vorgestellt werden.
-
---{{2}}--
-Diese Aspekte sollen durch das *Hello World* Programm der Mikrocontroller - blinken lassen einer LED - verdeutlicht werden.
-
---{{3}}-- 
-Da darüber hinaus der Datenaustausch sowie die Kommunikation mit dem eingebetteten System wesentlich für die erfolgreiche Programmierung ist, soll im zweiten Teil das Framework *Arduinoview* eingeführt werden. 
-
-**Fokus:**
-
-1. Hardwarenahe Programmierung des [AVR ATmega32U4](http://www.microchip.com/wwwproducts/en/ATmega32u4) durch das An-/Ausschalten einer LED
-2. Visualisierung von Daten/Zuständen des Mikrocontrollers durch [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
-
-## AVR ATmega32U4
-
---{{1}}--
-Hier könnt ihr das Datenblatt, sowie den Schaltbelegungsplan des Mikroncontrollers finden.
-
-
-* [Datenblatt](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
-* [Schaltbelegungsplan](./robubot_stud.pdf) 
-
-## Zusätzliches Material
-
---{{1}}--
-Neben dem Datenblatt und dem Schaltbelegungsplan, können euch diese Hilfsmittel eventuell auch weiter helfen.
-
+**Eingebettete Programmierung:**
+* [Tutorials für eingebettet Systeme](https://www.mikrocontroller.net/articles/AVR-Tutorial)
 * [Arduino Serielle I/O Funktionen](https://www.arduino.cc/en/reference/Serial)
 * [Arduino Blink Beispiel](https://www.arduino.cc/en/Tutorial/Blink)
 * [circuits.io - Autodesk Circuits](https://circuits.io/)
+
+**PKeS:**
+* [Datenblatt](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
+* [Schaltbelegungsplan](./materials/robubot_stud.pdf) 
+
+# Aufgabe 0
+
+--{{1}}--
+In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED zum Blinken bringen, bevor ihr in der zweiten Teilaufgabe das Framework *Arduinoview* nutzt um Daten und Zustände des Mikrocontrollers, bzw. des eingebetteten Systems, zu visualisieren.
 
 
 ## Aufgabe 0.1
@@ -88,7 +98,6 @@ Begin und Ende des Blinkens soll durch den Button 'Start/Ende', welcher durch da
 1. Konfiguriert den PIN 31 als Ausgang. Dies soll in der Funktion `configurePin()` geschehen.
 2. Implementiert zwei Funktion: `ledOn()` zum einschalten der LED, `ledOff()` zum ausschalten der LED.
 3. ...
-
 
 
 ## Aufgabe 0.2
@@ -110,19 +119,3 @@ Verbindung von Button und LED/Funktionalität
 Programmierung der Oberfläche mittels Arduinoview
 
 https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md
-
-
-
-#### Anwendung/Beispiel
-
-
-
-Setzen eines einzelnen Bits/Pins auf 1:
-  PORTC |= 1 << 2; --> "Bit 2"/ 3. Stelle
-  
-  + alternative schreibweise für 
-  
-Setzen eines einzelnen Bits/Pins auf 0:
-  PORTC &= ~(1 << 2); --> "Bit 2"/ 3. Stelle# IDE
-
-test
