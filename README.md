@@ -8,7 +8,7 @@ version:  1.0.0
 
 language: de_DE
 
-narator:  Deutsch Female
+narrator:  Deutsch Female
 
 -->
 
@@ -16,8 +16,6 @@ narator:  Deutsch Female
 
 --{{1}}--
 In diesem Kurs soll das eLearning-System *eLab* vorgestellt werden. Studenten, die die Vorlesung *Prinzipien und Komponenten eingebetteter Systeme* hören, werden es zur Bearbeitung der praktischen Aufgaben benutzen. 
-
-
 
 
 --{{2}}--
