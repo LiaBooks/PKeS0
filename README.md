@@ -71,14 +71,10 @@ Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocon
 * [Tutorials](http://www.learncpp.com/), [Bücher](https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list) 
 * [Videos:](https://www.youtube.com/watch?v=Rub-JsjMhWY)
 
-!![CTutorial](https://www.youtube.com/embed/Rub-JsjMhWY)<!--
-    position: relative;
-    left: 2.5%;
-    top: 20%;
-    width: 10%;
-    height: 40%;
---> 
-
+  !![C++Tutorial](https://www.youtube.com/embed/Rub-JsjMhWY)<!--
+    width: 560px;
+    height: 315px;
+  --> 
 * [Bitoperationen](https://de.wikipedia.org/wiki/Bitweiser_Operator)
 
 **Eingebettete Programmierung:**
