@@ -66,9 +66,19 @@ Für Interessierte gibt es darüber hinaus auch Tutorials, die direkt auf die Pr
 --{{4}}--
 Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocontrollers, als auch den Schaltbelegungsplan studieren.
 
-**C/C++:**
+**[C](https://en.wikipedia.org/wiki/C_%28programming_language%29)/[C++](https://en.wikipedia.org/wiki/C%2B%2B):**
 
-* [Tutorials](http://www.learncpp.com/), [Bücher](https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list) oder [Videos](https://www.youtube.com/watch?v=Rub-JsjMhWY) zu [C](https://en.wikipedia.org/wiki/C_%28programming_language%29)/[C++](https://en.wikipedia.org/wiki/C%2B%2B)
+* [Tutorials](http://www.learncpp.com/), [Bücher](https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list) 
+* [Videos:](https://www.youtube.com/watch?v=Rub-JsjMhWY)
+
+!![CTutorial](https://www.youtube.com/embed/Rub-JsjMhWY)<!--
+    position: relative;
+    left: 2.5%;
+    top: 20%;
+    width: 10%;
+    height: 40%;
+--> 
+
 * [Bitoperationen](https://de.wikipedia.org/wiki/Bitweiser_Operator)
 
 **Eingebettete Programmierung:**
@@ -80,42 +90,40 @@ Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocon
 **PKeS:**
 * [Datenblatt](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
 * [Schaltbelegungsplan](https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true) 
+* [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
+* [ArduinoLib](https://github.com/fesselk/ArduinoviewLib)
 
 # Aufgabe 0
 
 --{{1}}--
-In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED zum Blinken bringen, bevor ihr in der zweiten Teilaufgabe das Framework *Arduinoview* nutzt um Daten und Zustände des Mikrocontrollers, bzw. des eingebetteten Systems, zu visualisieren.
+In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED auf dem Roboter zum Blinken bringen, bevor ihr mit Hilfe des Frameworks *Arduinoview* von euch beliebig generierte Daten visualisiert.
+
+**Teilaufgaben:**
+
+* *0.1:* Lasst eine LED auf dem Roboter periodisch blinken.
+* *0.2:* Generiert beliebige Daten und visualisiert sie mit *Arduinoview*.
 
 
 ## Aufgabe 0.1
 
 **Ziel:** Lasst die LED an PIN 31 in einem Interval von 0.5 Sekunden aufleuchten und erlischen. 
 
-Begin und Ende des Blinkens soll durch den Button 'Start/Ende', welcher durch das Framework *Arduinoview* visualisiert wird, steuerbar sein.
+Begin und Ende des Blinkens soll durch den Button 'Start/Ende', welcher durch das Framework *Arduinoview* visualisiert wird, steuerbar sein. Für diese Aufgabe werden wir euch die Visualisierung durch *Arduinoview* vorgeben.
 
 **Teilschritte:**
 
-1. Konfiguriert den PIN 31 als Ausgang. Dies soll in der Funktion `configurePin()` geschehen.
-2. Implementiert zwei Funktion: `ledOn()` zum einschalten der LED, `ledOff()` zum ausschalten der LED.
-3. ...
+1. Konfiguriert den PIN 31 als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
+2. Implementiert die Funktion `blink()`, in der die LED ein und wieder ausgeschalten wird.
 
 
 ## Aufgabe 0.2
 
-Definition der GUI
+**Ziel:** Visualisiert beliebige, auf dem Mikrocontroller generierte, Daten mit Hilfe von *Arduinoview*.
 
-2 Frames:
-  1. Zurücksetzen der GUI
-  2. Anlegen des Button: -> Github Documentation Shorthand Arduinoview
-    -> !Sbb1v<Caption>
-    
-## Aufgabe 0.3
+Wie in der Aufgabe zuvor, soll die Funktionalität auch hier durch einen Button 'Start/Stop' an- bzw. ausgeschaltet werden können. Daher müsst ihr sowohl einen Button, als auch ein Diagramm mit Hilfe von *Arduinoview* visualisieren.
 
-Verbindung von Button und LED/Funktionalität
+**Teilschritte:**
 
---> Runner-Konzept
---> Beispiel aus ArduinoviewLib: https://github.com/fesselk/ArduinoviewLib/blob/master/examples/E01_button/E01_button.ino
-
-Programmierung der Oberfläche mittels Arduinoview
-
-https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md
+1. Fügt einen neuen Button zum starten/stoppen der Generierung der Daten hinzu und ein Diagramm zur Visualisierung der Daten.
+2. Verknüpft den Button mit der Callback-Funktion `buttonCallbackGraph()`.
+3. Implementiert die Funktion `sendValues()` um beliebige Daten zu generieren und diese zum Diagramm zu senden.
