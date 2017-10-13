@@ -32,7 +32,7 @@ Wesentlich für den weiteren Verlauf der Vorlesung ist, dass ihr den Mikrocontro
 Zur Programmierung selbst steht in dem eLearning-System eine einfache IDE bereit. Schon zur Bearbeitung dieser Aufgabe werdet ihr diese Nutzen.
 
 --{{4}}--
-Eines der Ziele dieser Aufgabe ist es, eine LED an dem Roboter zum Blinken zu bringen. Neben dem Wissen über den Mikrocontroller selbst, sollt ihr dazu den Schaltbelegungsplan studieren. So könnt ihr herausfinden, wie periphäre Komponenten, also Sensorik und Aktorik, an den Mikrocontroller angeschlossen ist.
+Eines der Ziele dieser Aufgabe ist es, eine LED an dem Roboter zum Blinken zu bringen. Neben dem Wissen über den Mikrocontroller selbst, sollt ihr dazu den Schaltbelegungsplan studieren. So könnt ihr herausfinden, wie periphäre Komponenten, also Sensorik und Aktorik, an den Mikrocontroller angeschlossen sind.
 
 --{{5}}--
 Da die Programmierung eingebetteter Systeme, wie auch bei der Anwendungsprogrammierung, zuweilen das Aufspüren und Beseitigen von Fehlern in der Implementierung beinhaltet, werdet ihr das Framework *Arduinoview* benutzen um Daten/Zustände des Mikrocontrollers zu visualisieren und Funktionalitäten ein- und auszuschalten.
@@ -84,7 +84,7 @@ Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocon
 * [circuits.io - Autodesk Circuits](https://circuits.io/)
 
 **PKeS:**
-* [Datenblatt](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
+* [Datenblatt des AVR ATmega32U4](http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf).
 * [Schaltbelegungsplan](https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true) 
 * [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
 * [ArduinoLib](https://github.com/fesselk/ArduinoviewLib)
@@ -92,34 +92,68 @@ Für die Bearbeitung der Aufgaben solltet ihr sowohl das Datenblatt des Mikrocon
 # Aufgabe 0
 
 --{{1}}--
-In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED auf dem Roboter zum Blinken bringen, bevor ihr mit Hilfe des Frameworks *Arduinoview* von euch beliebig generierte Daten visualisiert.
+In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED auf dem Roboter zum Blinken bringen, bevor ihr mit Hilfe des Frameworks *Arduinoview* Daten des Mikrocontrollers visualisiert.
 
 **Teilaufgaben:**
 
-* *0.1:* Lasst eine LED auf dem Roboter periodisch blinken.
-* *0.2:* Generiert beliebige Daten und visualisiert sie mit *Arduinoview*.
+* *0.1:* Lasst eine LED auf dem Roboter periodisch blinken. 
+* *0.2:* Nutzt *Arduinoview* um eine LED auf dem Roboter ein- und auszuschalten.
+* *0.2:* Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe von *Arduinoview*.
 
 
 ## Aufgabe 0.1
 
-**Ziel:** Lasst die LED an PIN 31 in einem Interval von 0.5 Sekunden aufleuchten und erlischen. 
+**Ziel:** Konfiguriert 2 LEDs und schaltet sie ein und aus. 
 
-Begin und Ende des Blinkens soll durch den Button 'Start/Ende', welcher durch das Framework *Arduinoview* visualisiert wird, steuerbar sein. Für diese Aufgabe werden wir euch die Visualisierung durch *Arduinoview* vorgeben.
+--{{1}}--
+In dieser Aufgabe sollt ihr zwei LEDs konfigurieren und sie unterschiedlich ansteuern.
+
+--{{2}}--
+Im ersten Teilschritt konfiguriert ihr PIN 31 und einen weiteren PIN eurer Wahl, an dem eine LED angeschlossen ist (!), als Ausgang. Außerdem implementiert ihr eine Funktion um die LED an PIN 31 mit einer Periodendauer von 0.5 Sekunden blinken zu lassen.
+
+--{{3}}--
+Im zweiten Teilschritt schaltet ihr das Blinken ein, nach dem der Benutzer eine entsprechende Eingabe durch die serielle Schnittstelle an den Mikrocontroller gesendet hat (z.B.: ein 'B' für 'Begin'). Sendet der Nutzer ein weiteres Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
 
 **Teilschritte:**
 
-1. Konfiguriert den PIN 31 als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
-2. Implementiert die Funktion `blink()`, in der die LED ein und wieder ausgeschalten wird.
+1. Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen. Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an PIN 31 angeschlossen ist, ein und wieder ausgeschalten wird. Implementiert eine Periodendauer von 0.5 Sekunden.
+2. Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die serielle Schnittstelle gesendet hat, z.B. ein 'B'. Stoppt das Verhalten, wenn ein weiters Kommando, z.B. ein 'S', gesendet wird.
 
 
 ## Aufgabe 0.2
 
-**Ziel:** Visualisiert beliebige, auf dem Mikrocontroller generierte, Daten mit Hilfe von *Arduinoview*.
+**Ziel:** Nutzt *Arduinoview* zur Interaktion mit dem Nutzer und zum Visualisieren von Daten.
 
-Wie in der Aufgabe zuvor, soll die Funktionalität auch hier durch einen Button 'Start/Stop' an- bzw. ausgeschaltet werden können. Daher müsst ihr sowohl einen Button, als auch ein Diagramm mit Hilfe von *Arduinoview* visualisieren.
+--{{1}}--
+In der letzten Teilaufgabe habt ihr gelernt wie ihr einzelne PINs an dem Mikrocontroller zur Ausgabe von digitalen Signalen konfiguriert und eine einfache Interaktion mit dem Nutzer über die serielle Schnittstelle realisiert.
+
+--{{2}}--
+In dieser Teilaufgabe soll das Verhalten des Mikrocontrollers erweitert werden. Diesesmal soll *Arduinoview* für die Interaktion genutzt werden.
+
+--{{3}}--
+Im ersten Teilschritt sollt ihr dazu das Klicken auf den Button 'LED On/Off' nutzen, um die von euch gewählte LED, d.h. nicht die LED an PIN 31, ein- bzw. auszuschalten.
+
+--{{4}}--
+Im vierten Teilschritt fügt ihr der Visualisierung durch *Arduinoview* ein Diagramm hinzu.
+
+--{{5}}--
+Das zuvor hinzugefügte Diagramm soll in dem fünften Teilschritt genutzt werden, um alle 500 ms neue Daten anzuzeigen. Die Daten, die angezeigt werden sollen, werden durch die bereits vorhandenen Funktionen `data0()` und `data1()` generiert. Ihr müsst lediglich die Funktion `sendValues()` implementieren um die Daten an das erstellte Diagramm zu senden.
+
+--{{6}}--
+Im letzten Teilschritt fügt ihr *Arduinoview* noch einen weiteren Button 'Graph On/Off' hinzu um die Visualisierung der Daten durch den Graphen ein- bzw. auszuschalten. 
 
 **Teilschritte:**
 
-1. Fügt einen neuen Button zum starten/stoppen der Generierung der Daten hinzu und ein Diagramm zur Visualisierung der Daten.
-2. Verknüpft den Button mit der Callback-Funktion `buttonCallbackGraph()`.
-3. Implementiert die Funktion `sendValues()` um beliebige Daten zu generieren und diese zum Diagramm zu senden.
+1. Nutzt den Button 'LED On/Off' um die zweite LED ein- bzw. auszuschalten.
+2. Generiert ein Diagramm mit Hilfe von *Arduinoview*.
+3. Visualisiert die Daten, die durch die Funktionen `data0()` und `data1()` generiert werden, in dem neuen Diagramm. Alle 500 ms sollen neue Daten gesendet werden.
+4. Fügt einen Button zum ein- und ausschalten des Sendes der Daten an das Diagramm hinzu.
+
+
+## Quellcodeverständnis
+
+--{{1}}--
+Nachdem ihr nun erste Erfahrungen mit der implementierung eingebetteter Systeme sammeln konntet, haben wir noch ein paar kurze Fragen an euch:
+
+**Fragen zum Quellcode:**
+Welchen Nachteil hat die Funktion `delay([ms])`?
