@@ -12,12 +12,12 @@ narrator:  Deutsch Female
 
 -->
 
-# Einführung
+# PKES 0
 
                                        --{{0}}--
 Willkommen bei dem eLearning-System *eLab*! Es wird euch bei der Bearbeitung der
-praktischen Aufgaben zur Vorlesung *Prinzipien und Komponenten eingebetteter
-Systeme* unterstützen.
+praktischen Aufgaben zur Vorlesung
+`Prinzipien und Komponenten eingebetteter Systeme` unterstützen.
 
                                        --{{1}}--
 Alle Kurse findet ihr auch online und falls ihr Verbesserungen, Korrekturen,
