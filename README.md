@@ -41,7 +41,7 @@ Falls ihr euch erfolgreich angemeldet habt dann müsstet ihr eine IDE sehen, wie
 sie im Bild dargestellt ist. Diese besteht grob gesehen aus vier Elementen, die
 in den folgenden Folien kurz vorgestellt werden.
 
-![ide overview](pics/ide0.png)<!-- width: 100% -->
+![ide overview](https://github.com/liaScript/PKeS0/raw/master/pics/ide0.png)<!-- width: 100% -->
 
                                        --{{1}}--
 Bitte fliegt kurz über die folgenden IDE-Abschnitte und macht euch mit den
@@ -54,7 +54,7 @@ Bedienelementen vertraut.
 Die verschiedenen Dateien könnt ihr über die jeweiligen Tabs ansteuern, wobei
 der erste Tab einen Link auf die serielle Ein- und Ausgabe zur Verfügung stellt.
 
-![editor](pics/editor.gif)<!-- width: 100% -->
+![editor](https://github.com/liaScript/PKeS0/raw/master/pics/editor.gif)<!-- width: 100% -->
 
 ### IDE - Dateien
 
@@ -62,7 +62,7 @@ der erste Tab einen Link auf die serielle Ein- und Ausgabe zur Verfügung stellt
 Über das DropDown-Menü könnt ihr neue Dateien hinzufügen, beziehungsweise alte
 Dateien umbenennen oder löschen.
 
-![file handling](pics/files.gif)<!-- width: 100% -->
+![file handling](https://github.com/liaScript/PKeS0/raw/master/pics/files.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Sollte es manchmal nicht möglich sein Dateien, wie zum Beispiel `Display.h` zu
@@ -78,7 +78,7 @@ Im Hintergrund läuft ein normaler Arduino-Compliler, sollte ausnahmsweise eines
 eurer Programme einen Fehler haben, dann wird euch dieser auch direkt in der IDE
 an der entsprechenden Stelle angezeigt.
 
-![editing and compilation](pics/editing.gif)<!-- width: 100% -->
+![editing and compilation](https://github.com/liaScript/PKeS0/raw/master/pics/editing.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Falls alles geklappt hat, dann seht ihr das durch einen grünen Execution-Button.
@@ -92,7 +92,7 @@ Euch steht ein lineares Versionssystem zur Verfügung, ihr könnt durch alle
 Lösungen gehen und alte Funktionierende Versionen auch kompilieren und wieder
 ausführen, nur diese editieren oder Verzweigungen einzufügen ist nicht möglich.
 
-![linear versioning](pics/versions.gif)<!-- width: 100% -->
+![linear versioning](https://github.com/liaScript/PKeS0/raw/master/pics/versions.gif)<!-- width: 100% -->
 
 
 ### Roboterauswahl
@@ -104,7 +104,7 @@ auswählen, jeder Klick verändert gegebenenfalls auch den Video-Stream. Per
 __Doppel-Klick__ loggt ihr euch auf einem Roboter ein und sperrt dann den
 Zugriff für die anderen Nutzer.
 
-![robot selection](pics/robot.gif)<!-- width: 100% -->
+![robot selection](https://github.com/liaScript/PKeS0/raw/master/pics/robot.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Wichtig ist, dass ihr euch nur auf einem Roboter einloggt, wenn ihr euer
@@ -118,7 +118,7 @@ keinen Roboter, also solltet ihr diese für eure Komolitonten freigeben.
 Die Video-Streams sind an die Roboter gekoppelt, ihr habt die Möglichkeit
 zwischen drei Stream-Qualitäten zu wählen oder diesen auszuschalten.
 
-![show video-stream](pics/lifestream.gif)<!-- width: 100% -->
+![show video-stream](https://github.com/liaScript/PKeS0/raw/master/pics/lifestream.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Beim Klick auf den unteren Link könnt ihr euren Stream entkoppeln und in einem
@@ -134,7 +134,7 @@ Tool, welches es euch ermöglichen soll euren Roboter mit Web-Elementen
 fernzusteuern aber auch eure Daten zu visualisieren, wie es eine serielle
 Schnittstelle nicht kann.
 
-![arduinoview](pics/execute.gif)<!-- width: 100% -->
+![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/execute.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Wie in der Abbildung dargestellt, flashed ihr euer Programm auf euren zuvor
@@ -144,7 +144,7 @@ Ausgabe über die serielle Schnittstellt sollte als einfache Log- sowie Debug-
 Möglichkeit genutzt werden.
 
                                          {{2}}
-![arduinoview](pics/execute.gif)<!-- width: 100% -->
+![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/execute.gif)<!-- width: 100% -->
 
 
                                        --{{2}}--
