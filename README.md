@@ -162,8 +162,8 @@ einen aussagekräftigen kleinen Bericht. Oben unter dem Link __Issue__!
 
                                        --{{0}}--
 Um zunächst einen Eindruck von dem System, sowie dem damit verbundenen
-Arbeitsablauf, zu bekommen, sollt ihr in dieser *nullten* Aufgabe das *Hello
-World*-Programm der eingebetteten Programmierung implementieren; das An- und
+Arbeitsablauf, zu bekommen, sollt ihr in dieser *nullten* Aufgabe das *Hello*
+*World*-Programm der eingebetteten Programmierung implementieren; das An- und
 Ausschalten einer LED.
 
 * Inbetriebnahme (sollte abgeschlossen sein)
