@@ -127,7 +127,7 @@ zwischen drei Stream-Qualitäten zu wählen oder diesen auszuschalten.
 Beim Klick auf den unteren Link könnt ihr euren Stream entkoppeln und in einem
 anderen fenster anzeigen lassen.
 
-### ArduinoView
+### ArduinoView 1
 
                                        --{{0}}--
 Wenn man über einen Web-Zugriff auf eingebettete Hardware verfügt, warum sollte
@@ -146,22 +146,23 @@ färbt, dann bedeuted dies, das euer Programm gestartet ist. Eine zusätzliche
 Ausgabe über die serielle Schnittstellt sollte als einfache Log- sowie Debug-
 Möglichkeit genutzt werden.
 
-                                         {{2}}
-![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/execute.gif)<!-- width: 100% -->
+### ArduinoView 2
 
-
-                                       --{{2}}--
+                                       --{{0}}--
 Die zweite Abbildung zeigt wie eure Lösung aussehen kann. Ihr müsst dabei nicht
 immer den Roboter neu flashen um euer Programm neu zu starten. Ein einfacher
 Klick auf den Reset-Button reicht und euer Roboter startet neu...
 
-### Probleme?
+![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/solution.gif)<!-- width: 100% -->
+
+
+## Probleme?
 
 Sollten Probleme bei der IDE oder mit den Robotern auftreten, so erstellt bitte
 einen aussagekräftigen kleinen Bericht. Oben unter dem Link __Issue__!
 
 
-## Aufgabenstellung
+## Aufgabe 0
 
                                        --{{0}}--
 Um zunächst einen Eindruck von dem System, sowie dem damit verbundenen
@@ -261,7 +262,7 @@ Schaltbelegungsplan studieren.
 
 
 
-# Aufgabe 0
+### Problemstellung
 
                                        --{{1}}--
 In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED auf dem Roboter
@@ -275,7 +276,7 @@ Mikrocontrollers visualisiert.
 * *0.2:* Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe von *Arduinoview*.
 
 
-## Aufgabe 0.1
+#### Aufgabe 0.1
 
 **Ziel:** Konfiguriert 2 LEDs und schaltet sie ein und aus.
 
@@ -307,7 +308,7 @@ Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
    ein weiters Kommando, z.B. ein 'S', gesendet wird.
 
 
-## Aufgabe 0.2
+#### Aufgabe 0.2
 
 **Ziel:** Nutzt *Arduinoview* zur Interaktion mit dem Nutzer und zum
 **Visualisieren von Daten.
