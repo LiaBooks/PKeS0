@@ -170,14 +170,14 @@ Arbeitsablauf, zu bekommen, sollt ihr in dieser *nullten* Aufgabe das *Hello*
 *World*-Programm der eingebetteten Programmierung implementieren; das An- und
 Ausschalten einer LED.
 
-* Inbetriebnahme (sollte abgeschlossen sein)
-* Embedded `Hello World` --> Blinken einer LED
-  1. Kennenlernen des Microcontrollers:
+1. Inbetriebnahme (sollte abgeschlossen sein)
+2. Embedded `Hello World` --> Blinken einer LED
+   * Kennenlernen des Microcontrollers:
      [AVR ATmega32U4](http://www.microchip.com/wwwproducts/en/ATmega32u4)
-  2. Kennenlernen der Hardware: (Peripherie, d.h Sensorik und Aktorik)
+   * Kennenlernen der Hardware: (Peripherie, d.h Sensorik und Aktorik)
      [Schaltbelegungsplan](https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true)
-  3. Debug- und Logging-Ausgaben: mittels der seriellen Schnittstelle
-  4. Interaktion mit dem Microcontroller via
+   * Debug- und Logging-Ausgaben: mittels der seriellen Schnittstelle
+   * Interaktion mit dem Microcontroller via
      [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
 
 
@@ -296,14 +296,14 @@ Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
 
 **Teilschritte:**
 
-1.                                        {{1}}
+1.                                       {{1}}
    Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
    ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
    Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an
    `PIN 31` angeschlossen ist, ein- und wieder ausgeschaltet wird. Implementiert
    eine Periodendauer von 0.5 Sekunden.
 
-2.                                        {{2}}
+2.                                       {{2}}
    Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
    serielle Schnittstelle gesendet hat, z.B. ein 'B'. Stoppt das Verhalten, wenn
    ein weiteres Kommando, z.Bsp. ein 'S', gesendet wird.
@@ -358,7 +358,7 @@ auszuschalten.
 ## Quellcodeverständnis
 
                                        --{{1}}--
-Nachdem ihr nun erste Erfahrungen mit der implementierung eingebetteter Systeme
+Nachdem ihr nun erste Erfahrungen mit der Implementierung eingebetteter Systeme
 sammeln konntet, haben wir noch ein paar kurze Fragen an euch:
 
 **Fragen zum Quellcode:**
