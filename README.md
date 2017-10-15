@@ -104,15 +104,15 @@ ausführen, nur diese editieren oder Verzweigungen einzufügen ist nicht möglic
 In der linken Leiste seht ihr alle zur Verfügung stehenden Roboter. Freie
 Roboter erkennt ihr an der grünen Farbe. Ihr könnt einzeln die Roboter
 auswählen, jeder Klick verändert gegebenenfalls auch den Video-Stream. Per
-__Doppel-Klick__ loggt ihr euch auf einem Roboter ein und sperrt dann den
-Zugriff für die anderen Nutzer.
+Doppel-Klick loggt ihr euch auf einem Roboter ein und sperrt dann den Zugriff
+für die anderen Nutzer.
 
 ![robot selection](https://github.com/liaScript/PKeS0/raw/master/pics/robot.gif)<!-- width: 100% -->
 
                                        --{{1}}--
 Wichtig ist, dass ihr euch nur auf einem Roboter einloggt, wenn ihr euer
 Programm auch tatsächlich ausführen wollt. Zum reinen entwickeln benötigt ihr
-keinen Roboter, also solltet ihr diese für eure Komolitonten freigeben.
+keinen Roboter, also solltet ihr diese für eure Komilitonen freigeben.
 
 
 ### Video-Stream
@@ -269,12 +269,13 @@ Mikrocontrollers visualisiert.
 
 **Teilaufgaben:**
 
-* *0.1:* Lasst eine LED auf dem Roboter periodisch blinken.
-* *0.2:* Nutzt *Arduinoview* um eine LED auf dem Roboter ein- und auszuschalten.
-* *0.2:* Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe von *Arduinoview*.
+1. Lasst eine LED auf dem Roboter periodisch blinken.
+2. Nutzt *Arduinoview* um eine LED auf dem Roboter ein- und auszuschalten.
+3. Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe
+   von *Arduinoview*.
 
 
-#### Teilaufgabe 0.1
+#### Teilaufgabe 1
 
                                        --{{0}}--
 In dieser Aufgabe sollt ihr zwei LEDs konfigurieren und sie unterschiedlich
@@ -309,7 +310,7 @@ Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
    ein weiteres Kommando, z.Bsp. ein 'S', gesendet wird.
 
 
-#### Aufgabe 0.2
+#### Teilaufgabe 2
 
 **Ziel:** Nutzt *Arduinoview* zur Interaktion mit dem Nutzer und zum
 **Visualisieren von Daten.
@@ -363,3 +364,7 @@ sammeln konntet, haben wir noch ein paar kurze Fragen an euch:
 
 **Fragen zum Quellcode:**
 Welchen Nachteil hat die Funktion `delay([ms])`?
+
+unterschied pin ein und ausgang???
+
+was ist ein Baud???
