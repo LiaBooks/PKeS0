@@ -47,8 +47,11 @@ in den folgenden Folien kurz vorgestellt werden.
 Bitte fliegt kurz über die folgenden IDE-Abschnitte und macht euch mit den
 Bedienelementen vertraut.
 
+### IDE
 
-### IDE - Tabs
+Im folgenden wird zunächst ein kleiner Überblick über den eLab-Editor gegeben.
+
+#### IDE - Tabs
 
                                        --{{0}}--
 Die verschiedenen Dateien könnt ihr über die jeweiligen Tabs ansteuern, wobei
@@ -56,7 +59,7 @@ der erste Tab einen Link auf die serielle Ein- und Ausgabe zur Verfügung stellt
 
 ![editor](https://github.com/liaScript/PKeS0/raw/master/pics/editor.gif)<!-- width: 100% -->
 
-### IDE - Dateien
+#### IDE - Dateien
 
                                        --{{0}}--
 Über das DropDown-Menü könnt ihr neue Dateien hinzufügen, beziehungsweise alte
@@ -71,7 +74,7 @@ unserer vorgefertigten Aufgabe. Diese Dateien sind dann leider nicht sichtbar
 für euch. Probiert einfach einen andere Namen ;-)
 
 
-### IDE - Compiler
+#### IDE - Compiler
 
                                        --{{0}}--
 Im Hintergrund läuft ein normaler Arduino-Compliler, sollte ausnahmsweise eines
@@ -85,7 +88,7 @@ Falls alles geklappt hat, dann seht ihr das durch einen grünen Execution-Button
 Um euer Programm dann auch auf einen Roboter zu flashen, müsst ihr euch auf
 einem freien Roboter einwählen.
 
-### IDE - Versionierung
+#### IDE - Versionierung
 
                                        --{{0}}--
 Euch steht ein lineares Versionssystem zur Verfügung, ihr könnt durch alle
