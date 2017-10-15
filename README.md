@@ -260,8 +260,6 @@ Schaltbelegungsplan studieren.
 * ArduinoLib: https://github.com/fesselk/ArduinoviewLib
 
 
-
-
 ### Problemstellung
 
                                        --{{1}}--
@@ -276,21 +274,21 @@ Mikrocontrollers visualisiert.
 * *0.2:* Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe von *Arduinoview*.
 
 
-#### Aufgabe 0.1
+#### Teilaufgabe 0.1
+
+                                       --{{0}}--
+In dieser Aufgabe sollt ihr zwei LEDs konfigurieren und sie unterschiedlich
+ansteuern.
 
 **Ziel:** Konfiguriert 2 LEDs und schaltet sie ein und aus.
 
                                        --{{1}}--
-In dieser Aufgabe sollt ihr zwei LEDs konfigurieren und sie unterschiedlich
-ansteuern.
-
-                                       --{{2}}--
 Im ersten Teilschritt konfiguriert ihr PIN 31 und einen weiteren PIN eurer Wahl,
 an dem eine LED angeschlossen ist (!), als Ausgang. Außerdem implementiert ihr
 eine Funktion um die LED an PIN 31 mit einer Periodendauer von 0.5 Sekunden
 blinken zu lassen.
 
-                                       --{{3}}--
+                                       --{{2}}--
 Im zweiten Teilschritt schaltet ihr das Blinken ein, nach dem der Benutzer eine
 entsprechende Eingabe durch die serielle Schnittstelle an den Mikrocontroller
 gesendet hat (z.B.: ein 'B' für 'Begin'). Sendet der Nutzer ein weiteres
@@ -298,14 +296,17 @@ Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
 
 **Teilschritte:**
 
-1. Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
-   ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen. Implementiert
-   darüber hinaus die Funktion `blink()`, in der die LED, die an PIN 31
-   angeschlossen ist, ein und wieder ausgeschalten wird. Implementiert eine
-   Periodendauer von 0.5 Sekunden.
-2. Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
+1.                                        {{1}}
+   Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
+   ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
+   Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an
+   `PIN 31` angeschlossen ist, ein- und wieder ausgeschaltet wird. Implementiert
+   eine Periodendauer von 0.5 Sekunden.
+
+2.                                        {{2}}
+   Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
    serielle Schnittstelle gesendet hat, z.B. ein 'B'. Stoppt das Verhalten, wenn
-   ein weiters Kommando, z.B. ein 'S', gesendet wird.
+   ein weiteres Kommando, z.Bsp. ein 'S', gesendet wird.
 
 
 #### Aufgabe 0.2
