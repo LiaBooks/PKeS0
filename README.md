@@ -360,15 +360,15 @@ auszuschalten.
 
                                        --{{1}}--
 Nachdem ihr nun erste Erfahrungen mit der Implementierung eingebetteter Systeme
-sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr mit euren 
+sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr mit euren
 Tutoren in den Übungen diskutieren solltet:
 
 **Fragen zum Quellcode:**
 
 
 1. Welchen Nachteil hat die Funktion `delay([ms])`?
-   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken der LED) 
-   mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das Blinken der LED 
+   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken der LED)
+   mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das Blinken der LED
    zusammen mit dem Senden von Daten an das Diagramm) gegenüber.
 
 2. Welche Unterschiede ergeben sich software- und hardwareseitig, wenn ein PIN als Ein-
@@ -376,5 +376,53 @@ Tutoren in den Übungen diskutieren solltet:
 
 3. Was ist ein Baud?
 
-4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche 
+4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche
    Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen; beispielsweise einem `#define`?
+
+
+### Macros 1
+
+Welche Aussagen treffen auf C Macros zu bzw. welche nicht?
+
+    [[X]] Beginnt immer mit einem `#`.
+    [[ ]] Wird vom Compiler augerufen.
+    [[X]] Kann **nur** während des Compilevorgangs Programmelemente ersetzen.
+    [[X]] Ist nur eine Textersetzung.
+    [[ ]] Macros können genutzt werden um neue Macros zu erzeugen.
+    [[ ]] `#include` ist kein Makro.
+    [[[
+
+1. Ja, neben `#define` oder `#include` gibt es noch weitere Macrodirektiven.
+2. Nur der Präprozessor ersetzt Macros,
+3. wobei es sich um eine reine Textersetzung handelt.
+4. Dieser Schritt wird vor dem eigentlichen Kompilieren durchgeführt
+5. und nur einmalig, Rekursion oder Schleifen oder komplexere
+   Programmersetzungen (wie in Lisp, Elixir, etc.) sind nicht möglich.
+6. Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der
+   Unterschied zwischen den Angaben `"file1.h"` und `<file2.h>` liegt am
+   Speicherort der Datei. Erstere ist lokal im gleichen Verzeichnis und die
+   zweite in einem Systemverzeichnis.
+
+
+https://de.wikipedia.org/wiki/C-Pr%C3%A4prozessor
+
+]]]
+
+### Macros 2
+
+``` C
+#define square(X) X*X
+
+square(3+2); // wie lautet das Ergebnis?
+```
+
+Wie sieht das Resultat der folgenden Quadrierung aus, bitte gib dein Ergebnis
+als Zahl in das folgende Textfeld ein:
+
+    [[11]]
+    [[[
+
+Das Ergebnis der Ersetzung ist `3+2*3+2` also ist hier die richtige Antwort 11
+und nicht 25. Ihr solltet also durchaus Vorsichtig mit Makros umgehen ...
+
+]]]
