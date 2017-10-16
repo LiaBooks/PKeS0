@@ -181,6 +181,8 @@ Ausschalten einer LED.
      [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
 
 
+
+
                                        --{{1}}--
 Während der Bearbeitung der Aufgabe sollen verschiedene Themen zur
 Programmierung eingebetteter Systeme angesprochen werden.  Wesentlich für den
@@ -189,7 +191,7 @@ ATmega32U4, kennenlernt. Dieser wird während der Aufgaben zu programmieren sein
 
                                        --{{2}}--
 Eines der Ziele dieser Aufgabe ist es, eine LED an dem Roboter zum Blinken zu
-bringen. Neben dem Wissen über den Mikrocontroller selbst, sollt ihr dazu den
+bringen. Neben dem Mikrocontroller selbst, solltet ihr dazu den
 Schaltbelegungsplan studieren. So könnt ihr herausfinden, wie periphäre
 Komponenten, also Sensorik und Aktorik, an den Mikrocontroller angeschlossen
 sind.
@@ -203,7 +205,7 @@ Daten/Zustände des Mikrocontrollers zu visualisieren und Funktionalitäten ein-
 und auszuschalten.
 
 
-**Ziel(e) --> Kennenlernen des Arbeitsablaufs**
+**Ziel(e)**
 
 * Recherchieren der nötigen Informationen zur Bearbeitung einer Aufgabe. Welche
   Dokumente sind relevant?
@@ -292,8 +294,8 @@ blinken zu lassen.
                                        --{{2}}--
 Im zweiten Teilschritt schaltet ihr das Blinken ein, nach dem der Benutzer eine
 entsprechende Eingabe durch die serielle Schnittstelle an den Mikrocontroller
-gesendet hat (z.B.: ein 'B' für 'Begin'). Sendet der Nutzer ein weiteres
-Zeichen, z.B. 'S' für 'Stop', soll das Blinken beendet werden.
+gesendet hat (z.B.: 'B' für 'Begin'). Sendet der Nutzer ein weiteres
+Zeichen (z.B.: 'S' für 'Stop') soll das Blinken beendet werden.
 
 **Teilschritte:**
 
@@ -330,14 +332,14 @@ nutzen, um die von euch gewählte LED, d.h. nicht die LED an PIN 31, ein- bzw.
 auszuschalten.
 
                                        --{{4}}--
-Im vierten Teilschritt fügt ihr der Visualisierung durch *Arduinoview* ein
+Im zweiten Teilschritt fügt ihr der Visualisierung durch *Arduinoview* ein
 Diagramm hinzu.
 
                                        --{{5}}--
-Das zuvor hinzugefügte Diagramm soll in dem fünften Teilschritt genutzt werden,
+Das zuvor hinzugefügte Diagramm soll in dem dritten Teilschritt genutzt werden,
 um alle 500 ms neue Daten anzuzeigen. Die Daten, die angezeigt werden sollen,
 werden durch die bereits vorhandenen Funktionen `data0()` und `data1()`
-generiert. Ihr müsst lediglich die Funktion `sendValues()` implementieren um die
+generiert. Ihr müsst lediglich die Funktion `sendValues()` implementieren, um die
 Daten an das erstellte Diagramm zu senden.
 
                                        --{{6}}--
@@ -360,11 +362,21 @@ auszuschalten.
 
                                        --{{1}}--
 Nachdem ihr nun erste Erfahrungen mit der Implementierung eingebetteter Systeme
-sammeln konntet, haben wir noch ein paar kurze Fragen an euch:
+sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr mit euren 
+Tutoren in den Übungen diskutieren solltet:
 
 **Fragen zum Quellcode:**
-Welchen Nachteil hat die Funktion `delay([ms])`?
 
-unterschied pin ein und ausgang???
 
-was ist ein Baud???
+1. Welchen Nachteil hat die Funktion `delay([ms])`?
+   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken der LED) 
+   mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das Blinken der LED 
+   zusammen mit dem Senden von Daten an das Diagramm) gegenüber.
+
+2. Welche Unterschiede ergeben sich software- und hardwareseitig, wenn ein PIN als Ein-
+   oder Ausgang konfiguriert wird?
+
+3. Was ist ein Baud?
+
+4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche 
+   Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen; beispielsweise einem `#define`?
