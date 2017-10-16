@@ -389,19 +389,17 @@ Welche Aussagen gelten für C-Macros?
 
     [[X]] Beginnt immer mit einem `#`.
     [[ ]] Wird vom Compiler augerufen.
-    [[X]] Kann **nur** während des Compilevorgangs Programmelemente ersetzen.
     [[X]] Ist nur eine Textersetzung.
     [[ ]] Macros können genutzt werden um neue Macros zu erzeugen.
     [[ ]] `#include` ist kein Makro.
     [[[
 
 1. Ja, neben `#define` oder `#include` gibt es noch weitere Macrodirektiven.
-2. Nur der Präprozessor ersetzt Macros,
-3. wobei es sich um eine reine Textersetzung handelt.
-4. Dieser Schritt wird vor dem eigentlichen Kompilieren durchgeführt
-5. und nur einmalig, Rekursion oder Schleifen oder komplexere
+2. Nur der Präprozessor ersetzt Macros vor dem eigentlichen Kompilieren,
+3. dabei handelt es sich um eine reine Textersetzung.
+4. Diese wird nur einmalig durchgefürht, Rekursion oder Schleifen oder komplexere
    Programmersetzungen (wie in Lisp, Elixir, etc.) sind nicht möglich.
-6. Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der
+5. Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der
    Unterschied zwischen den Angaben `"file1.h"` und `<file2.h>` liegt am
    Speicherort der Datei. Erstere ist lokal im gleichen Verzeichnis und die
    zweite in einem Systemverzeichnis.
