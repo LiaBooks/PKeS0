@@ -367,18 +367,21 @@ Tutoren in den Übungen diskutieren solltet:
 
 
 1. Welchen Nachteil hat die Funktion `delay([ms])`?
-   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken der LED)
-   mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das Blinken der LED
-   zusammen mit dem Senden von Daten an das Diagramm) gegenüber.
 
-2. Welche Unterschiede ergeben sich software- und hardwareseitig, wenn ein PIN als Ein-
-   oder Ausgang konfiguriert wird?
+   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken
+   der LED) mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das
+   Blinken der LED zusammen mit dem Senden von Daten an das Diagramm) gegenüber.
+
+2. Welche Unterschiede ergeben sich software- und hardwareseitig, wenn ein PIN
+   als Ein- oder Ausgang konfiguriert wird?
 
 3. Was ist ein Baud?
 
-4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche
-   Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen; beispielsweise einem `#define`?
+4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und
+   welche Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen;
+   beispielsweise einem `#define`?
 
+## Quizze
 
 ### Macros 1
 
@@ -424,5 +427,87 @@ als Zahl in das folgende Textfeld ein:
 
 Das Ergebnis der Ersetzung ist `3+2*3+2` also ist hier die richtige Antwort 11
 und nicht 25. Ihr solltet also durchaus Vorsichtig mit Makros umgehen ...
+
+]]]
+
+
+### Ports
+
+Wie viele general purpose PORTs hat der verwendete Controller
+
+    [[ ]] 4
+    [[X]] 5
+    [[ ]] 6
+    [[ ]] 7
+    [[[
+
+Der Atmel ATmega32U4 hat 5 GPIO (General Purpose Input-Output) Interfaces - B, C,
+D, E und F. Interessanter Weise wird PORTA einfach ausgelassen. Probieren
+Sie mal aus für diesen die entsprechenden Register PINA oder PORTA zu beschreiben
+
+Handbuch Seite 4: Block Diagram
+
+]]]
+
+### DDRx Register
+
+Welche Aufgabe übernimmt das DDRx Register bei der Konfiguration bezüglich eines
+Pins?
+
+    [[X]] Festlegung des Zustandes (high, low)
+    [[X]] Definition des Pins als Eingang oder Ausgang
+    [[ ]] Datenformat des Eingangs
+    [[ ]] Taktrate der Leseoperationen
+    [[ ]] Klassifikation der physischen Verfügbarkeit
+    [[[
+
+Der Name Data Directory Register ist Programm, die Bits dieser Register, die auf
+dem Controller für B, C, D, E und F existieren definieren die Richtung des
+Betriebs eines Pins (0 = Eingang, 1 = Ausgang).
+
+]]]
+
+### Widerstand?
+
+Der elektrische Schaltplan zeigt das jede Diode LED 1-4 mit einem Widerstand
+verbunden ist. Was ist dessen Aufgabe?
+
+    [[ ]] Konfiguartion des Farbprofils der Diode
+    [[X]] Beschränkung des Stromflusses durch die Diode
+    [[ ]] Filtern und Glätten von Störimpulsen
+    [[ ]] Galvanische Trennung des Prozessors von der Umgebung
+    [[[
+
+Als Faustformel kann für Standarddioden von einer maximal zulässigen Stromfluß
+von 20mA und einer Durchflussspannung von 2.2V ausgegangen werden. Unser
+Mikrocontroller wird mit 3.3V betrieben Der (überdimensionierte) Widerstand
+übernimmt die Begrenzung des Stromflusses durch die Diode und die weniger
+kritische Spannungsanpassung. Damit wird eine lange Lebensdauer garantiert.
+
+]]]
+
+
+### Debugging?
+
+Aussgaben über die serielle Schnittstelle werden bei eingebetteten Systemen
+häufig für das Debugging genutzt. Was sind die Konsequenzen, wenn das Schreiben
+dieser Ausgaben für die finale Version abgeschalten wird?
+
+    [[ ]] Speicherüberlauf
+    [[X]] Verringert Stromaufnahme des Controllers
+    [[ ]] Reduzierung der Programmgröße
+    [[X]] Änderung des Zeitverhaltens des Programms
+    [[[
+
+Ein zu erwartendes Resultat, wenn die Serielle Schnittstelle vollständig
+abgeschalten wird, ist die Verringerung der Stromaufnahme des Prozessor. Dazu
+genügt es aber nicht nur auf die Schreib-/Lese-Operationen zu verzichten,
+vielmehr muss die Schnittestelle deaktiviert werden (Standardzustand beim
+Booten).
+
+Die Schreib-/Lese-Operationen verlangen eine nicht unerhebliche
+Prozessorleistung. Entsprechend ändert sich die Laufzeit des Programms, was in
+zeitkritischen Anwendungen bei "fragwürdiger" Programmierung zu einem gänzlich
+veränderten Verhalten führen kann.
 
 ]]]
