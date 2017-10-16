@@ -299,8 +299,8 @@ Zeichen (z.B.: 'S' für 'Stop') soll das Blinken beendet werden.
 
 **Teilschritte:**
 
-1. Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
-   ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
+1. Konfiguriert den PIN 31 und einen weiteren PIN, an dem eine LED angeschlossen
+   ist, als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
    Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an
    `PIN 31` angeschlossen ist, ein- und wieder ausgeschaltet wird. Implementiert
    eine Periodendauer von 0.5 Sekunden.
