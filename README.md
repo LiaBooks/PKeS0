@@ -299,15 +299,13 @@ Zeichen (z.B.: 'S' für 'Stop') soll das Blinken beendet werden.
 
 **Teilschritte:**
 
-1.                                       {{1}}
-   Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
+1. Konfiguriert den PIN 31 und einen weiteren PIN an den eine LED angeschlossen
    ist als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
    Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an
    `PIN 31` angeschlossen ist, ein- und wieder ausgeschaltet wird. Implementiert
    eine Periodendauer von 0.5 Sekunden.
 
-2.                                       {{2}}
-   Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
+2. Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
    serielle Schnittstelle gesendet hat, z.B. ein 'B'. Stoppt das Verhalten, wenn
    ein weiteres Kommando, z.Bsp. ein 'S', gesendet wird.
 
@@ -354,7 +352,7 @@ auszuschalten.
 3. Visualisiert die Daten, die durch die Funktionen `data0()` und `data1()`
    generiert werden, in dem neuen Diagramm. Alle 500 ms sollen neue Daten
    gesendet werden.
-4. Fügt einen Button zum ein- und ausschalten des Senders der Daten an das
+4. Fügt einen Button zum ein- und ausschalten des Sendens der Daten an das
    Diagramm hinzu.
 
 
