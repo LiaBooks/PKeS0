@@ -77,7 +77,7 @@ für euch. Probiert einfach einen andere Namen ;-)
 #### IDE - Compiler
 
                                        --{{0}}--
-Im Hintergrund läuft ein normaler Arduino-Compliler, sollte ausnahmsweise eines
+Im Hintergrund läuft ein normaler Arduino-Compiler, sollte ausnahmsweise eines
 eurer Programme einen Fehler haben, dann wird euch dieser auch direkt in der IDE
 an der entsprechenden Stelle angezeigt.
 
@@ -112,7 +112,7 @@ für die anderen Nutzer.
                                        --{{1}}--
 Wichtig ist, dass ihr euch nur auf einem Roboter einloggt, wenn ihr euer
 Programm auch tatsächlich ausführen wollt. Zum reinen entwickeln benötigt ihr
-keinen Roboter, also solltet ihr diese für eure Komilitonen freigeben.
+keinen Roboter, also solltet ihr diese für eure Kommilitonen freigeben.
 
 
 ### Video-Stream
@@ -125,7 +125,7 @@ zwischen drei Stream-Qualitäten zu wählen oder diesen auszuschalten.
 
                                        --{{1}}--
 Beim Klick auf den unteren Link könnt ihr euren Stream entkoppeln und in einem
-anderen fenster anzeigen lassen.
+anderen Fenster anzeigen lassen.
 
 ### ArduinoView 1
 
@@ -142,8 +142,8 @@ Schnittstelle nicht kann.
                                        --{{1}}--
 Wie in der Abbildung dargestellt, flashed ihr euer Programm auf euren zuvor
 ausgewählten Roboter mit Klick auf den `Execute` Button. Wenn sich dieser rot
-färbt, dann bedeuted dies, das euer Programm gestartet ist. Eine zusätzliche
-Ausgabe über die serielle Schnittstellt sollte als einfache Log- sowie Debug-
+färbt, dann bedeutet dies, das euer Programm gestartet ist. Eine zusätzliche
+Ausgabe über die serielle Schnittstelle sollte als einfache Log- sowie Debug-
 Möglichkeit genutzt werden.
 
 ### ArduinoView 2
@@ -388,7 +388,7 @@ Tutoren in den Übungen diskutieren solltet:
 Welche Aussagen gelten für C-Macros?
 
     [[X]] Beginnt immer mit einem `#`.
-    [[ ]] Wird vom Compiler augerufen.
+    [[ ]] Wird vom Compiler aufgerufen.
     [[X]] Ist nur eine Textersetzung.
     [[ ]] Macros können genutzt werden um neue Macros zu erzeugen.
     [[ ]] `#include` ist kein Makro.
@@ -397,7 +397,7 @@ Welche Aussagen gelten für C-Macros?
 1. Ja, neben `#define` oder `#include` gibt es noch weitere Macrodirektiven.
 2. Nur der Präprozessor ersetzt Macros vor dem eigentlichen Kompilieren,
 3. dabei handelt es sich um eine reine Textersetzung.
-4. Diese wird nur einmalig durchgefürht, Rekursion oder Schleifen oder komplexere
+4. Diese wird nur einmalig durchgeführt, Rekursion oder Schleifen oder komplexere
    Programmersetzungen (wie in Lisp, Elixir, etc.) sind nicht möglich.
 5. Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der
    Unterschied zwischen den Angaben `"file1.h"` und `<file2.h>` liegt am
@@ -452,7 +452,7 @@ Handbuch Seite 4: Block Diagram
 Welche Aufgabe übernimmt das DDRx Register bei der Konfiguration bezüglich eines
 Pins?
 
-    [[X]] Festlegung des Zustandes (high, low)
+    [[X]] Festlegung des Zustandes (High, Low)
     [[X]] Definition des Pins als Eingang oder Ausgang
     [[ ]] Datenformat des Eingangs
     [[ ]] Taktrate der Leseoperationen
@@ -470,13 +470,13 @@ Betriebs eines Pins (0 = Eingang, 1 = Ausgang).
 Der elektrische Schaltplan zeigt das jede Diode LED 1-4 mit einem Widerstand
 verbunden ist. Was ist dessen Aufgabe?
 
-    [[ ]] Konfiguartion des Farbprofils der Diode
+    [[ ]] Konfiguration des Farbprofils der Diode
     [[X]] Beschränkung des Stromflusses durch die Diode
     [[ ]] Filtern und Glätten von Störimpulsen
     [[ ]] Galvanische Trennung des Prozessors von der Umgebung
     [[[
 
-Als Faustformel kann für Standarddioden von einer maximal zulässigen Stromfluß
+Als Faustformel kann für Standarddioden von einer maximal zulässigen Stromfluss
 von 20mA und einer Durchflussspannung von 2.2V ausgegangen werden. Unser
 Mikrocontroller wird mit 3.3V betrieben Der (überdimensionierte) Widerstand
 übernimmt die Begrenzung des Stromflusses durch die Diode und die weniger
@@ -487,9 +487,9 @@ kritische Spannungsanpassung. Damit wird eine lange Lebensdauer garantiert.
 
 ### Serielle Schnittstelle
 
-Aussgaben über die serielle Schnittstelle werden bei eingebetteten Systemen
+Ausgaben über die serielle Schnittstelle werden bei eingebetteten Systemen
 häufig für das Debugging genutzt. Was sind die Konsequenzen, wenn das Schreiben
-dieser Ausgaben für die finale Version abgeschalten wird?
+dieser Ausgaben für die finale Version abgeschaltet wird?
 
     [[ ]] Speicherüberlauf
     [[X]] Verringert Stromaufnahme des Controllers
@@ -498,9 +498,9 @@ dieser Ausgaben für die finale Version abgeschalten wird?
     [[[
 
 Ein zu erwartendes Resultat, wenn die Serielle Schnittstelle vollständig
-abgeschalten wird, ist die Verringerung der Stromaufnahme des Prozessor. Dazu
+abgeschaltet wird, ist die Verringerung der Stromaufnahme des Prozessor. Dazu
 genügt es aber nicht nur auf die Schreib-/Lese-Operationen zu verzichten,
-vielmehr muss die Schnittestelle deaktiviert werden (Standardzustand beim
+vielmehr muss die Schnittstelle deaktiviert werden (Standardzustand beim
 Booten).
 
 Die Schreib-/Lese-Operationen verlangen eine nicht unerhebliche
