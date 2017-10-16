@@ -385,7 +385,7 @@ Tutoren in den Übungen diskutieren solltet:
 
 ### Macros 1
 
-Welche Aussagen treffen auf C Macros zu bzw. welche nicht?
+Welche Aussagen treffen auf C-Macros zu?
 
     [[X]] Beginnt immer mit einem `#`.
     [[ ]] Wird vom Compiler augerufen.
