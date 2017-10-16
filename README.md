@@ -465,7 +465,7 @@ Betriebs eines Pins (0 = Eingang, 1 = Ausgang).
 
 ]]]
 
-### Widerstand?
+### Widerstand
 
 Der elektrische Schaltplan zeigt das jede Diode LED 1-4 mit einem Widerstand
 verbunden ist. Was ist dessen Aufgabe?
@@ -485,7 +485,7 @@ kritische Spannungsanpassung. Damit wird eine lange Lebensdauer garantiert.
 ]]]
 
 
-### Debugging?
+### Serielle Schnittstelle
 
 Aussgaben über die serielle Schnittstelle werden bei eingebetteten Systemen
 häufig für das Debugging genutzt. Was sind die Konsequenzen, wenn das Schreiben
