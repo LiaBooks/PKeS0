@@ -360,11 +360,10 @@ auszuschalten.
 
                                        --{{1}}--
 Nachdem ihr nun erste Erfahrungen mit der Implementierung eingebetteter Systeme
-sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr mit euren 
-Tutoren in den Übungen diskutieren solltet:
+sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr in 
+Vorbereitung der Abgabe der Aufgabe bei den Tutoren klären solltet:
 
 **Fragen zum Quellcode:**
-
 
 1. Welchen Nachteil hat die Funktion `delay([ms])`?
    Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken der LED) 
@@ -378,3 +377,86 @@ Tutoren in den Übungen diskutieren solltet:
 
 4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche 
    Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen; beispielsweise einem `#define`?
+   
+   
+ **Verständnisfragen zu Aufgabe 0**
+ 
+ Wie viele general purpose PORTs hat der verwendete Controller 
+  [[ ]] 4
+  [[X]] 5 
+  [[ ]] 6
+  [[ ]] 7
+  
+     [[[
+
+     Der Atmel ATmega32U4 hat 5 GPIO (General Purpose Input-Output) Interfaces - B, C,
+     D, E und F. Interessanter Weise wird PORTA einfach ausgelassen. Probieren
+     Sie mal aus für diesen die entsprechenden Register PINA oder PORTA zu beschreiben
+    
+     Handbuch Seite 4: Block Diagram
+    ]]]
+
+ Welche Aufgabe übernimmt das DDRx Register bei der Konfiguration bezüglich eines Pins?
+  Festlegung des Zustandes (high, low)
+  [[X]] Definition des Pins als Eingang oder Ausgang
+  [[ ]] Datenformat des Eingangs
+  [[ ]] Taktrate der Leseoperationen
+  [[ ]] Klassifikation der physischen Verfügbarkeit
+    
+    [[[
+
+     Der Name Data Directory Register ist Programm, die Bits dieser Register, die auf 
+     dem Controller für B,C,D,E und F existieren definieren die Richtung des Betriebs eines
+     Pins (0 = Eingang, 1 = Ausgang).
+    
+    ]]]  
+
+ Der elektrische Schaltplan zeigt das jede Diode LED 1-4 mit einem Widerstand verbunden ist.
+ Was ist dessen Aufgabe?
+  [[ ]] Konfiguartion des Farbprofils der Diode
+  [[X]] Beschränkung des Stromflusses durch die Diode
+  [[ ]] Filtern und Glätten von Störimpulsen
+  [[ ]] Galvanische Trennung des Prozessors von der Umgebung
+    
+    [[[
+
+    Als Faustformel kann für Standarddioden von einer maximal zulässigen Stromfluß von 20mA und einer
+    Durchflussspannung von 2.2V ausgegangen werden. Unser Mikrocontroller wird mit 3.3V betrieben
+    Der (überdimensionierte) Widerstand übernimmt die Begrenzung des Stromflusses durch die Diode und
+    die weniger kritische Spannungsanpassung. Damit wird eine lange Lebensdauer garantiert.
+    ]]]    
+    
+    
+ Aussgaben über die serielle Schnittstelle werden bei eingebetteten Systemen häufig für
+ das Debugging genutzt. Was sind die Konsequenzen, wenn das Schreiben dieser 
+ Ausgaben für die finale Version abgeschalten wird?
+   [[ ]] Speicherüberlauf
+   [[X]] Verringert Stromaufnahme des Controllers 
+   [[ ]] 
+   [[X]] Änderung des Zeitverhaltens des Programms
+   
+       [[[
+
+    Ein zu erwartendes Resultat, wenn die Serielle Schnittstelle vollständig abgeschalten wird, ist die Verringerung der Stromaufnahme des Prozessor. Dazu genügt es aber nicht nur auf die Schreib-/Lese-Operationen zu verzichten, vielmehr muss die
+    Schnittestelle deaktiviert werden (Standardzustand beim Booten). 
+    
+    Die Schreib-/Lese-Operationen verlangen eine nicht unerhebliche Prozessorleistung. Entsprechend ändert sich die Laufzeit des Programms, was in zeitkritischen Anwendungen bei "fragwürdiger" Programmierung zu einem gänzlich veränderten Verhalten führen kann.
+
+    ]]]
+   
+  Welche Aussagen treffen auf C Macros zu bzw. welche nicht?
+   [[ ]] Wird vom Compiler augerufen.
+   [[X]] Kann *nur* während des Compilevorgangs Programmelemente ersetzen.
+   [[X]] Ist nur eine Textersetzung.
+   [[ ]] Macros können genutzt werden um neue Macros zu erzeugen.
+
+    [[[
+
+    Der Präprozessor ersetzt Macros, wobei es sich um eine reine Textersetzung handelt. Dieser Schritt wird vor dem eigentlichen Kompilieren durchgeführt und nur einmalig, Rekursion oder Schleifen oder komplexere Programmersetzungen (wie in Lisp, Elixir, etc.) sind nicht möglich
+
+    siehe https://de.wikipedia.org/wiki/C-Pr%C3%A4prozessor
+
+    ]]]
+   
+   
+ 
