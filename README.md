@@ -440,7 +440,7 @@ using namespace std;
 #define square(X) X*X
 
 int main() {
-    cout << "square(3+2) = " << square(3+2) << endl;
+    cout << "square 3+2 = " << square(3+2) << endl;
     return 0;
 }
 ```
