@@ -10,6 +10,8 @@ language: de_DE
 
 narrator:  Deutsch Female
 
+script:   https://felixhao28.github.io/JSCPP/dist/JSCPP.es5.min.js
+
 -->
 
 # PKES 0
@@ -424,7 +426,29 @@ als Zahl in das folgende Textfeld ein:
     [[[
 
 Das Ergebnis der Ersetzung ist `3+2*3+2` also ist hier die richtige Antwort 11
-und nicht 25. Ihr solltet also durchaus Vorsichtig mit Makros umgehen ...
+und nicht 25. Probiert es einfach aus, wenn ihr es nicht glaubt. Ihr könnt ja
+noch für euch selber testen wie man das Macro anpassen muss, damit es das
+richtige Ergebnis liefert. Mit einem Doppel-Klick auf den Quell-Code wechselt
+ihr in den Editier-Modus und mit einem weiteren Doppel-Klick kommt ihr auch
+wieder heraus ;-)
+
+
+```cpp
+#include <iostream>
+using namespace std;
+
+#define square(X) X*X
+
+int main() {
+    cout << "square(3+2) = " << square(3+2) << endl;
+    return 0;
+}
+```
+<!--
+  var output = "";
+  JSCPP.run(`{X}`, "", {stdio: {write: s => { output += s.replace(/\n/g, "<br>");}}});
+  output;
+-->
 
 ]]]
 
