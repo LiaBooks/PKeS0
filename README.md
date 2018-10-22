@@ -1,387 +1,763 @@
 <!--
+author:   André Dietrich, Karl Fessel
 
-author:   Georg Jäger
+email:    andre.dietrich@ovgu.de
 
-email:    gjaeger@ovgu.de
+version:  0.0.2
 
-version:  1.0.0
+language: de
 
-language: de_DE
+narrator: Deutsch Female
 
-narrator:  Deutsch Female
+comment:  Einführung in das eLab.
 
-script:   https://felixhao28.github.io/JSCPP/dist/JSCPP.es5.min.js
+
+@run_main
+<script>
+events.register("@0", e => {
+		if (!e.exit)
+    		send.lia("output", e.stdout);
+		else
+    		send.lia("eval",  "LIA: stop");
+});
+
+send.handle("input", (e) => {send.service("@0",  {input: e})});
+send.handle("stop",  (e) => {send.service("@0",  {stop: ""})});
+
+
+send.service("@0", {start: "CodeRunner", settings: null})
+.receive("ok", e => {
+		send.lia("output", e.message);
+
+		send.service("@0", {files: {"main.c": `@input`}})
+		.receive("ok", e => {
+				send.lia("output", e.message);
+
+				send.service("@0",  {compile: "gcc main.c -o a.out", order: ["main.c"]})
+				.receive("ok", e => {
+						send.lia("log", e.message, e.details, true);
+
+						send.service("@0",  {execute: "./a.out"})
+						.receive("ok", e => {
+								send.lia("output", e.message);
+								send.lia("eval", "LIA: terminal", [], false);
+						})
+						.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
+				})
+				.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
+		})
+		.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+})
+.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+
+"LIA: wait";
+</script>
+
+@end
+
 
 -->
 
-# PKES 0
+# PKES 0: Input & Output
 
-                                       --{{0}}--
-Willkommen bei dem eLearning-System *eLab*! Es wird euch bei der Bearbeitung der
-praktischen Aufgaben zur Vorlesung
-`Prinzipien und Komponenten eingebetteter Systeme` unterstützen.
+    --{{0}}--
+Willkommen bei dem eLearning-System eLab! Es wird euch bei der Bearbeitung der
+praktischen Aufgaben zur Vorlesung Prinzipien und Komponenten eingebetteter
+Systeme unterstützen.
 
-                                       --{{1}}--
+    --{{1}}--
 Alle Kurse findet ihr auch online und falls ihr Verbesserungen, Korrekturen,
 eigene Versionen oder vertiefende Kurse anbieten wollt, so freuen wir uns über
 eure Beiträge ;-)
 
-
 Source: * https://github.com/liaScript/PKeS0 *
 
-__Ziele:__
+Ziele:
 
-1. Kennenlernen der Kurs- und Entwicklungsumgebung
-2. Einführung in Programmierung und Kommunikation mit dem Arduino
-   _(Kennenlernen eures Microcontrollers)_
-
-
-## Entwicklungsumgebung
-
-                                       --{{0}}--
-Falls ihr euch erfolgreich angemeldet habt dann müsstet ihr eine IDE sehen, wie
-sie im Bild dargestellt ist. Diese besteht grob gesehen aus vier Elementen, die
-in den folgenden Folien kurz vorgestellt werden.
-
-![ide overview](https://github.com/liaScript/PKeS0/raw/master/pics/ide0.png)<!-- width: 100% -->
-
-                                       --{{1}}--
-Bitte fliegt kurz über die folgenden IDE-Abschnitte und macht euch mit den
-Bedienelementen vertraut.
-
-### IDE
-
-Im folgenden wird zunächst ein kleiner Überblick über den eLab-Editor gegeben.
-
-#### IDE - Tabs
-
-                                       --{{0}}--
-Die verschiedenen Dateien könnt ihr über die jeweiligen Tabs ansteuern, wobei
-der erste Tab einen Link auf die serielle Ein- und Ausgabe zur Verfügung stellt.
-
-![editor](https://github.com/liaScript/PKeS0/raw/master/pics/editor.gif)<!-- width: 100% -->
-
-#### IDE - Dateien
-
-                                       --{{0}}--
-Über das DropDown-Menü könnt ihr neue Dateien hinzufügen, beziehungsweise alte
-Dateien umbenennen oder löschen.
-
-![file handling](https://github.com/liaScript/PKeS0/raw/master/pics/files.gif)<!-- width: 100% -->
-
-                                       --{{1}}--
-Sollte es manchmal nicht möglich sein Dateien, wie zum Beispiel `Display.h` zu
-erstellen, dann existieren diese Dateien bereits im Hintergrund und sind Teil
-unserer vorgefertigten Aufgabe. Diese Dateien sind dann leider nicht sichtbar
-für euch. Probiert einfach einen andere Namen ;-)
+* Kennenlernen der Kurs- und Entwicklungsumgebung
+* Möglichkeiten der Interaktion (Input & Output)
+* Einführung in Programmierung und Kommunikation mit dem Arduino (Kennenlernen
+  eures Microcontrollers)
 
 
-#### IDE - Compiler
+## C-Programme
 
-                                       --{{0}}--
-Im Hintergrund läuft ein normaler Arduino-Compiler, sollte ausnahmsweise eines
-eurer Programme einen Fehler haben, dann wird euch dieser auch direkt in der IDE
-an der entsprechenden Stelle angezeigt.
+    --{{0}}--
+Wir werden die Aufgaben ein wenig mischen. Um die wenigen Roboter nicht in Gänze
+auslasten zu müssen werden einige Programme in C geschrieben und auf dem Server
+ausgeführt:
 
-![editing and compilation](https://github.com/liaScript/PKeS0/raw/master/pics/editing.gif)<!-- width: 100% -->
+``` c main.c
+#include <stdio.h>
 
-                                       --{{1}}--
-Falls alles geklappt hat, dann seht ihr das durch einen grünen Execution-Button.
-Um euer Programm dann auch auf einen Roboter zu flashen, müsst ihr euch auf
-einem freien Roboter einwählen.
-
-#### IDE - Versionierung
-
-                                       --{{0}}--
-Euch steht ein lineares Versionssystem zur Verfügung, ihr könnt durch alle
-Lösungen gehen und alte Funktionierende Versionen auch kompilieren und wieder
-ausführen, nur diese editieren oder Verzweigungen einzufügen ist nicht möglich.
-
-![linear versioning](https://github.com/liaScript/PKeS0/raw/master/pics/versions.gif)<!-- width: 100% -->
+int main()
+{
+  printf("Hallo Welt")
+  return 0;
+}
+```
+@run_main(hallo_welt)
 
 
-### Roboterauswahl
+    --{{1}}--
+Wenn du auf play klicks, wird das Projekt auf den Server kopiert, kompiliert und
+ausgeführt. Das Programm enthält jedoch einen syntaktischen Fehler, auf den dich
+der Editor hinweist. Führst du das fehlende Semikolon in Zeile 5 ein, dann
+sollte  das Programm erfolgreich kompilieren und ausgeführt werden.
 
-                                       --{{0}}--
-In der linken Leiste seht ihr alle zur Verfügung stehenden Roboter. Freie
-Roboter erkennt ihr an der grünen Farbe. Ihr könnt einzeln die Roboter
-auswählen, jeder Klick verändert gegebenenfalls auch den Video-Stream. Per
-Doppel-Klick loggt ihr euch auf einem Roboter ein und sperrt dann den Zugriff
-für die anderen Nutzer.
+    --{{2}}--
+Wie du jetzt bemerkt haben solltest, hast du eine neue Version deines Ursprungs
+Programm erzeugt und kannst auch wieder zu deinen alten Versionen zurückkehren
+und diese auch wieder editieren.
 
-![robot selection](https://github.com/liaScript/PKeS0/raw/master/pics/robot.gif)<!-- width: 100% -->
+    --{{3}}--
+Daneben gibt es natürlich auch nicht ausführbaren Code, solche Snippets dienen dann nur der Erklärung oder Verdeutlichung eines Sachverhaltes und besitzen keinen Play-Button.
 
-                                       --{{1}}--
-Wichtig ist, dass ihr euch nur auf einem Roboter einloggt, wenn ihr euer
-Programm auch tatsächlich ausführen wollt. Zum reinen entwickeln benötigt ihr
-keinen Roboter, also solltet ihr diese für eure Kommilitonen freigeben.
+     {{3-4}}
+``` c
+...
+int main()
+{
+  printf("Hallo, ich bin nicht ausführbar ...");
+  return 0;
+}
+```
 
-
-### Video-Stream
-
-                                       --{{0}}--
-Die Video-Streams sind an die Roboter gekoppelt, ihr habt die Möglichkeit
-zwischen drei Stream-Qualitäten zu wählen oder diesen auszuschalten.
-
-![show video-stream](https://github.com/liaScript/PKeS0/raw/master/pics/lifestream.gif)<!-- width: 100% -->
-
-                                       --{{1}}--
-Beim Klick auf den unteren Link könnt ihr euren Stream entkoppeln und in einem
-anderen Fenster anzeigen lassen.
-
-### ArduinoView 1
-
-                                       --{{0}}--
-Wenn man über einen Web-Zugriff auf eingebettete Hardware verfügt, warum sollte
-man diese dann nicht auch mit den Möglichkeiten einen modernen Web-Browsers
-programmieren? [Arduinoview](https://gitlab.com/OvGU-ESS/arduinoview) ist ein
-Tool, welches es euch ermöglichen soll euren Roboter mit Web-Elementen
-fernzusteuern aber auch eure Daten zu visualisieren, wie es eine serielle
-Schnittstelle nicht kann.
-
-![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/execute.gif)<!-- width: 100% -->
-
-                                       --{{1}}--
-Wie in der Abbildung dargestellt, flashed ihr euer Programm auf euren zuvor
-ausgewählten Roboter mit Klick auf den `Execute` Button. Wenn sich dieser rot
-färbt, dann bedeutet dies, das euer Programm gestartet ist. Eine zusätzliche
-Ausgabe über die serielle Schnittstelle sollte als einfache Log- sowie Debug-
-Möglichkeit genutzt werden.
-
-### ArduinoView 2
-
-                                       --{{0}}--
-Die zweite Abbildung zeigt wie eure Lösung aussehen kann. Ihr müsst dabei nicht
-immer den Roboter neu flashen um euer Programm neu zu starten. Ein einfacher
-Klick auf den Reset-Button reicht und euer Roboter startet neu...
-
-![arduinoview](https://github.com/liaScript/PKeS0/raw/master/pics/solution.gif)<!-- width: 100% -->
+    --{{4}}--
+In Zukunft wird es natürlich auch noch größere Projekte geben, du kannst
+ausführbare Dateien auch schileßen oder öffnen indem du auf die Titelleiste
+klickst. Mit einem klick auf den Pfeil rechts in der Titelleiste kannst du
+zwischen Vollbild (ganze Datei) und minimaler Darstellung (maximal 12 Zeilen)
+wechseln.
 
 
-## Probleme?
+### Eingaben via `scanf`
 
-Sollten Probleme bei der IDE oder mit den Robotern auftreten, so erstellt bitte
-einen aussagekräftigen kleinen Bericht. Oben unter dem Link __Issue__!
+    --{{0}}--
+Wie man mit `printf` Ausgaben mit C generiert hast du ja bereits in teilen
+gesehen. Jetzt geht es darum, das Programm ein wenig zu erweitern.
 
+* Nutze die Funktion `scanf` um Zahlen einzugeben.
+* Formatiere in `printf` Ausgabe damit der aktuelle Zähler angezeigt wird.
+
+``` c main.c
+#include <stdio.h>
+
+int main()
+{
+  int i = 0;
+  int max = 5;
+
+  printf("Wie oft soll gegrüßt werden: ");
+
+  // TODO: insert scanf here
+
+  for(i; i<max; ++i) {
+    // TODO: change printf to print out the value of i
+    printf("Hallo # i\n");
+  }
+
+  return 0;
+}
+```
+@run_main(nummer_welt)
+
+
+## Arduino
+
+    --{{0}}--
+Wie du im unteren Code-Abschnitt siehst, so unterscheidet sich ein
+Arduino-Programm von einem Standard-C Programm einmal durch die Dateiendung
+`ino` und einmal durch das Fehlen der `main`-Funktion. Diese ist aufgeteilt in
+eine `setup` und eine `loop` -Funktion. Ein Programm für einem Microcontroller
+schreibt man für die "Ewigkeit" das nur von einigen "Resets" neu gestartet wird.
+Deshalb diese Konvention, in der einmalig `setup` zur Initialisierung aufgerufen
+wird und `loop` sonst in einer Endlosschleife ausgeführt wird:
+
+``` c sketch.ino
+int counter;
+
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+  // initialize the counter variable
+  counter = 0;
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+
+  Serial.print("Hello World ");
+  Serial.println(++counter);
+
+  delay(1000);        // delay in between reads for stability
+}
+```
+@run_main(hallo_welt)
+
+    --{{1}}--
+Unter dem Startknopf befinden sich mehrere Roboter die du zur Ausführung deines
+Programms auswählen kannst. _Mit großer Macht kommt auch große Verantwortung._
+Falls du dein Programm auch tatsächlich ausführen möchtest, dann wähle einen
+dieser Roboter aus. Wenn sich der Button grün färbt, dann hast du diesen für
+dich  und dein Programm exklusiv reserviert und dein Programm wird automatisch
+auf den dazugehörigen Microcontroller übertragen, man spricht in diesem
+Zusammenhang auch von "flashen".
+
+    --{{2}}--
+Drückst du auf Stop, so wird dein Programm beendet und du wirst erstmal vom
+Roboter abgemeldet. Gehe bitte Ressourcensparend vor und logge einen Roboter nur
+wenn du auch tatsächlich dein Programm ausführen möchtest, so haben andere
+Studenten auch die Möglichkeit ihre Programme zu Testen und wir haben einen
+höheren Durchsatz.
+
+
+
+### Eingaben via `Serial.read`
+
+    --{{0}}--
+Das folgende Programm dient nur der Fingerübung und zeigt dir, wie du über die
+Serielle Schnittstelle mit dem System kommunizieren kannst. Versuch doch mal das
+Programm zu erweitern und ein Hallo-Welt Programm zu schreiben, das in mehreren
+Sprachen grüßt, in Abhänigkeit von deiner Eingabe.
+
+``` c
+char receivedChar;
+boolean newData = false;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("<Arduino is ready>");
+}
+
+void loop() {
+  recvOneChar();
+  showNewData();
+}
+
+void recvOneChar() {
+  if (Serial.available() > 0) {
+    receivedChar = Serial.read();
+    newData = true;
+  }
+}
+
+void showNewData() {
+  if (newData == true) {
+    Serial.print("This just in ... ");
+    Serial.println(receivedChar);
+    newData = false;
+  }
+}
+```
+
+## Arduinoview
+
+    --{{0}}--
+Wenn wir schon über eine Weboberfläche programmieren, dann sollte es zumindest
+auch die Möglichkeit geben, mit eurem System mithilfe von Webtechnologien zu
+interagieren. Mit ArduinoView habt ihr die Möglichkeit HTML- und
+JavaScript-Elemente auf eurem Bot abzulegen, die über die Serielle Schnittstelle
+an euer Web-Interface übergeben werden.
+
+    --{{1}}--
+ArduinoView ermöglicht euch eine bi-direktionale Kommunikation, sodass ihr nicht
+nur Messergebnisse in Diagrammen analysieren könnt, sondern auch Buttons und
+Slider oder andere Elemente zur Steuerung eures Roboters nutzen könnt. Auf den
+folgenden Seiten erhaltet ihr einen Chrash-Kurs in der Nutzung von ArduinoView.
+
+````
+  _________________________                        _________________________
+ |                         |      {Messages}      |                         |
+ |      Application        |< - - - - - - - - - ->|   HTML5 & JavaScript    |
+ |_________________________|                      |_________________________|
+
+  _________________________                        _________________________
+ |                         | {Arduinoview frames} |                         |
+ |     Framer-Unframer     |< - - - - - - - - - ->|     Framer-Unframer     |
+ |_________________________|                      |_________________________|
+
+  _________________________                        _________________________
+ |                         |                      |                         |
+ |     Arduino-Serial      |                      |      OS -> Browser      |
+ |_________________________|                      |_________________________|
+
+  __________________________________________________________________________
+ |                                                                          |
+ |                             Serial over WiFi                             |
+ |__________________________________________________________________________|
+
+````
+
+ArduinoView on Github: TODO
+
+### Arduino -> ArduinoView
+
+    --{{0}}--
+ArduinoView kommuniziert, wie in der Grafik zuvor skizziert, in abgeschlossenen
+Frames. Ein Frame beginnt mit dem ersten `frm.print` und wird mit `frm.end`
+abgeschlossen. Ein solcher Frame kann als vollständige Anweisung interpretiert
+werden. Die ersten zwei Zeichen werden als "runner" interpretiert, sie stellen
+die Funktionalität dar, die auf der Gegenseite aufgerufen wird. ArduinoView
+unterstütz insgesamt 7 unterschiedliche "runner", die auch erweitert werden
+können.
+
+    {{0}}
+``` c
+  frm.print("!h");
+  frm.print("<h1>ArduinoView</h1>");
+  ...
+  frm.end();
+```
+
+    --{{1}}--
+Im obigen Beispiel wird der runner "!h" aufgerufen, er ersetzt per default den
+Inhalt von ArduinoView durch den darauf folgenden HTML-Code. Mehrfache Aufrufe
+dieser Art ersetzten die vorhergehende Darstellung.
+
+    --{{2}}--
+Anders ist dies bei "!H". Dies ergänzt den vorhandenen HTML-Code. Dies kann auch
+als "append" interpretiert werden.
+
+    {{2}}
+``` c
+  frm.print("!H");
+  frm.print("<h2>Demo 0 - Hello World </h2>");
+  frm.end();
+```
+
+    --{{3}}--
+Der runner "!j" führt Javascript im Kontext des ArduinoView-Fensters aus. Dieser
+kann auch komplexere Befehle wie `document.getElementById`, `console.log` oder
+die Definition von Javascript-Funktionen genutzt werden.
+
+    {{3}}
+``` c
+  frm.print("!j");
+  frm.print("alert(\"3+5=\"+(3+5))");
+  frm.end();
+```
+
+    --{{4}}--
+Der runner "!w" ändert das gegenwärtige Workelement, auf welches alle
+HTML-Befehle auswirken. Wie unten dargestellt, kann der Inhalt jedes
+HTML-Knotens auf diese Weise dynamisch angepasst werden.
+
+    {{4}}
+``` c
+  // create a state div
+  frm.print("!H");
+  frm.print("<div id=\"status\">");
+  frm.print("noch kein Status ...");
+  frm.print("</div>");
+  frm.end();
+
+  // set the work element to an existing id
+  frm.print("!wstatus");
+  frm.end();
+  // and change its content
+  frm.print("!hsomething has changed ...");
+  frm.end();
+
+  // reset work element to default (body)
+  frm.print("!w"); frm.end();
+```
+
+Der "!!" runner kommt nur in dieser Kurzschreibweise vor. Er führt zu einer
+Neuinitilisierung des ArduinoView-Fensters. Nach der Initialisierung antwortet
+ArduinoView seinerseits mit einem "!!". An dieses Ereignis sollte auch die
+Initialisierung der graphischen Bedienoberfläche gebunden werden.
+
+    {{5}}
+``` c
+  frm.print("!!");
+  frm.end();
+```
+
+#### Shorthands
+
+Beispiel Buttons:
+
+``` c
+  // !Sb(utton)[id]v(Some Text)
+  // always as complete frame
+  frm.print("!Sb01vklick Mich");
+  frm.end();
+```
+
+Arduinoview shorthand provides some graphical "standard" elements through the
+runner "!S". It suffers from the problem of Arduviz an Guino in that it provides
+only a set of GUI elements. Each element is represented by a character which is
+followed by a 2 byte ID that is written to the IDs array and can be accessed by
+the workelement object.
+
+
+```
+<Shorthand Frame>   : !S<E><ID><DATA>
+<E>                 : <Character>
+<ID>                : <Character><Character>
+<Data>              : < ! separated Information >
+```
+
+interpretation of E
+
+| Shorthand | Description |
+|---|-----------------------------------------------------------------------------------------|
+| l | adds a line break |
+| b | adds a Button <DATA> value will be interpreted as Caption; onclick it will send g  its 2 byte ID |
+| s | adds a slider (range); onchange it will send !g + its 2 byte ID + it value (0-255) |
+| c | adds a checkbox; onchange it will send !g + its 2 byte ID + its value (t or f) |
+| G | adds a graph using the flot.js library (defaults to a moving Graph)|
+| t | adds a textinput; onchange it will send !g + its 2 byte ID + its value |
+| d | adds a div block that is styled as a inline block |
+
+interpretation of DATA
+
+the Data is partitioned by ! and each part is interpreted by its first character
+
+| character | interpretation |
+|---|-------------------------------------|
+| s | css style the element |
+| w | css width |
+| h | css height |
+| v | value (interpretation depends on the Element) |
+
+
+Example: consecutive Frames
+
+```
+!Sdlew49%
+```
+
+adds a div with a width of 49% with the IDs[] entry "le"
+
+```
+!Sdriw49%
+```
+
+adds a div with a width of 49% with the IDs[] entry "ri"
+
+The two div will be side by side.
+
+```
+!wle
+```
+
+switch to the left div
+
+```
+!SMgl
+```
+
+adds a moving graph to the left div with the IDs[] entry "gl" without further
+attributes it defaults to 100% width and 20em height
+
+```
+!wri
+```
+
+switch to the right div
+
+**Diagrams**
+
+```
+!SGgrw80%!h300px
+```
+
+adds a not moving graph to the right div with the IDs[] entry "gr" its width
+will be 80% of the right div and its height 300px
+
+
+The graphs may now be filled with Data, this can be done by either accessing the
+plot container via JavaScript GUI-data runner of the Graph '!d'.
+
+```
+!dgr100,200
+```
+
+writes the values 100 and 200 to the GUI Elemet gr, the graph will interprete
+them as values to be attached to the graph.
+
+
+
+### Arduino <- ArduinoView
+
+    --{{0}}--
+Nachrichten von der Weboberfläche (ArduinoView) werden auf dem Arduino mittels
+der ArduinoView-Library als Callbacks interpretiert. Hierzu muss in `loop` die
+Funktion `frm.run()` aufgerufen werden. Dabei kann zwischen zwei Verfahren
+unterschieden werden, ein greedy- und non-greedy-Variante.
+
+``` c
+// greedy, use for simple programs
+void loop() {
+  // process all characters available
+  while(frm.run());
+  ...
+}
+// non-greedy, to be used for complex tasks
+void loop() {
+  // process a single character only,
+  // it gives other processes/functions a chance to work
+  frm.run();
+  ...
+}
+```
+
+Welcher runner an welche Funktion gebunden ist, wird in der runnerlist
+definiert. Der `callrunner` übergibt keine Parameter an die aufgerufene
+Funktion. Der `fwdrunner` entfernt die ersten beiden Zeichen (Kopf) aus der
+Nachricht und übergibt den Rest der Nachricht an die aufgerufen Funktion.
+
+```c
+beginrunnerlist();
+callrunner(!!,InitGUI);      // call function(void)
+fwdrunner(tx,print2serial);  // call function(char* str, size_t length)
+fwdrunner(LD,LEDrunnerlist); // forward to another runnerlist
+endrunnerlist();
+```
+
+> Beachte, dass bei Runnerlisten unbeding `runnerlist` im aufrufenden `fwdrunner`
+> definiert sein muss, dieser Begriff jedoch in der Definition der aufgerufenen
+> Runnerlist fehlt.
+
+```c
+beginrunnerlist(LED);        // <- See the title (no runnerlist)
+fwdrunner(gr,setGreenLed);   // call setGreenLed(char* str, size_t length)
+fwdrunner(bl,setBlueLed);    // call setBlueLed(char* str, size_t length)
+fwdrunner(rd,setRedLed);     // call setRedLed(char* str, size_t length)
+endrunnerlist();
+```
+
+### Initialisierung der Kommunikation
+
+    --{{0}}--
+Im unteren Snippet ist dargestellt, welche Schritte noch zur Initialisierung von
+ArduinoView notwendig sind.
+
+> Bei der Initialisierung für das eLab ist hierbei nur zu beachten, das
+> `FrameStream` auf die  serielle Schnittstelle 1 (`Serial1`) gelegt wird.
+> `Serial` ohne 1 publiziert auf die Konsole. Mit `Serial1.begin`, welches
+> innerhalb der `setup` Funktion aufgerufen wird, wird die Schnittstellt
+> initialisiert.
+
+```c
+#include <FrameStream.h>
+#include <Frameiterator.h>
+
+#define OUTPUT__BAUD_RATE 57600
+FrameStream frm(Serial1);
+
+...
+// definition of runnerlists
+beginrunnerlist();
+callrunner(!!,InitGUI);
+endrunnerlist();
+
+...
+void setup() {
+  // init serial communication for ArduinoView
+  Serial1.begin(OUTPUT__BAUD_RATE1);
+
+  // request reset of gui
+  frm.print("!!");
+  frm.end();
+
+  // give it some time to initialize
+  delay(500);
+  ...
+```
+
+### Hallo
+
+    --{{0}}--
+Die Folgenden Seiten enthalten Kurze ausführbare Beispiele, mit denen du
+Experimentieren kannst um später komplexere Darstellungen und Interaktionen mit
+deinem Roboter zu implementieren
+
+1. Yet another HalloWOrld-Program
+2. Eye-Candy-Diagrams
+3. Wahoo-Super-Buttons
+
+Weitere Beispiele findest du unter: TODO
+
+#### ArduinoView
+
+Arduino goes HTML:
+
+``` c sketch.ino
+// -----------------------------------------------------------------
+// Examples of the ArduinoView Library
+// 0. Hello World
+// -----------------------------------------------------------------
+// This example demonstates the integration of html content within
+// the arduino code
+
+#include <FrameStream.h>
+#include <Frameiterator.h>
+
+#define OUTPUT__BAUD_RATE 57600
+FrameStream frm(Serial1);
+
+// We do not have any interaction in this example, but a default
+// callback definition is need for frm.run().
+// GUI initialisation request
+
+beginrunnerlist();
+callrunner(!!,InitGUI);
+endrunnerlist();
+
+void InitGUI(){
+  frm.print("!h<h1>ArduinoView</h1>");
+  frm.print("<h2>Demo 0 - Hello World </h2>");
+  frm.print("<p>Congratulation you transmitted the first HTML Code from your Arduino!!!</p>");
+  frm.print("<img src=\"https://upload.wikimedia.org/wikipedia/commons/8/87/Arduino_Logo.svg\" height=\"200\" width=\"200\" >");
+  frm.end();
+}
+
+void setup() {
+  Serial.begin(OUTPUT__BAUD_RATE1);
+
+  //request reset of gui
+  frm.print("!!");
+  frm.end();
+
+  delay(500);
+}
+
+void loop() {
+  frm.run();
+}
+```
+<script>@input</script>
+
+#### Diagramm
+
+Extended Shorthands:
+
+``` c
+#include <FrameStream.h>
+#include <Frameiterator.h>
+
+#define OUTPUT__BAUD_RATE 57600
+FrameStream frm(Serial1);
+
+beginrunnerlist();
+callrunner(!!,InitGUI);
+endrunnerlist();
+
+void setup() {
+  //prepare Serial interfaces
+  Serial1.begin(OUTPUT__BAUD_RATE);
+  frm.print("!!");
+  frm.end();
+
+  delay(500);
+}
+
+void InitGUI()
+{
+    // Generating the diagram
+    frm.print("!SGgrv50");
+    frm.end();
+}
+
+void loop() {
+    while(frm.run());
+
+    frm.print("!dgr");
+    frm.print(random(300));
+    frm.end();
+
+    delay(500);
+}
+```
+
+#### Button
+
+Comunicating from Arduino -> Web -> Arduino
+
+``` c
+#include <FrameStream.h>
+#include <Frameiterator.h>
+
+#define OUTPUT__BAUD_RATE 57600
+FrameStream frm(Serial1);
+
+// hierarchical runnerlist, that connects the gui elements with
+// callback methods
+declarerunnerlist(GUI);
+
+beginrunnerlist();
+callrunner(!!,InitGUI);
+fwdrunner(!g,GUIrunnerlist);
+endrunnerlist();
+
+beginrunnerlist(GUI);
+callrunner(GO,callback_GO);
+endrunnerlist();
+
+
+void callback_GO(){
+  static int i = 0;
+
+  // change workelement to st
+  frm.print("!wst");
+  frm.end();
+
+  // change content
+  frm.print("!h");
+  frm.print(i);
+  frm.end();
+
+  // reset we
+  frm.print("!w");
+  frm.end();
+
+  Serial.print("klick ");
+  Serial.println(i);
+
+  i++;
+}
+
+void setup() {
+  //prepare Serial interfaces
+  Serial1.begin(OUTPUT__BAUD_RATE);
+  Serial.begin(9600);
+  frm.print("!!");
+  frm.end();
+
+  delay(500);
+}
+
+void InitGUI()
+{
+    frm.print("!h<h1>Status-Counter</h1>");
+    frm.end();
+
+    // generate (S)horthand (d)iv with id st
+    frm.print("!Sdst");
+    frm.end();
+
+    // generate (S)horthand (b)utton with id GO and (v)alue Klick
+    frm.print("!SbGOvKlick");
+    frm.end();
+}
+
+void loop() {
+    while(frm.run());
+}
+```
 
 ## Aufgabe 0
 
-                                       --{{0}}--
-Um zunächst einen Eindruck von dem System, sowie dem damit verbundenen
-Arbeitsablauf, zu bekommen, sollt ihr in dieser *nullten* Aufgabe das *Hello*
-*World*-Programm der eingebetteten Programmierung implementieren; das An- und
-Ausschalten einer LED.
+Klick to switch on LED?
 
-1. Inbetriebnahme (sollte abgeschlossen sein)
-2. Embedded `Hello World` --> Blinken einer LED
-   * Kennenlernen des Microcontrollers:
-     [AVR ATmega32U4](http://www.microchip.com/wwwproducts/en/ATmega32u4)
-   * Kennenlernen der Hardware: (Peripherie, d.h Sensorik und Aktorik)
-     [Schaltbelegungsplan](https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true)
-   * Debug- und Logging-Ausgaben: mittels der seriellen Schnittstelle
-   * Interaktion mit dem Microcontroller via
-     [Arduinoview](https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md)
+```
 
+```
 
-
-
-                                       --{{1}}--
-Während der Bearbeitung der Aufgabe sollen verschiedene Themen zur
-Programmierung eingebetteter Systeme angesprochen werden.  Wesentlich für den
-weiteren Verlauf der Vorlesung ist, dass ihr den Mikrocontroller, AVR
-ATmega32U4, kennenlernt. Dieser wird während der Aufgaben zu programmieren sein.
-
-                                       --{{2}}--
-Eines der Ziele dieser Aufgabe ist es, eine LED an dem Roboter zum Blinken zu
-bringen. Neben dem Mikrocontroller selbst, solltet ihr dazu den
-Schaltbelegungsplan studieren. So könnt ihr herausfinden, wie periphäre
-Komponenten, also Sensorik und Aktorik, an den Mikrocontroller angeschlossen
-sind.
-
-                                       --{{3}}--
-Da die Programmierung eingebetteter Systeme, wie auch bei der
-Anwendungsprogrammierung, zuweilen das Aufspüren und Beseitigen von Fehlern in
-der Implementierung beinhaltet, werdet ihr das Framework
-[Arduinoview](https://gitlab.com/OvGU-ESS/arduinoview) benutzen um
-Daten/Zustände des Mikrocontrollers zu visualisieren und Funktionalitäten ein-
-und auszuschalten.
-
-
-**Ziel(e)**
-
-* Recherchieren der nötigen Informationen zur Bearbeitung einer Aufgabe. Welche
-  Dokumente sind relevant?
-* Einarbeiten in die Programmierung des Systems. Wo finde ich Hilfe und
-  Erklärungen zu Bibliotheken und Funktionen?
-* Implementieren der Lösung entsprechend der Recherchierten Informationen. Wie
-  funktioniert der Kompilierungs-, Assemblierungs- und Linkprozess für
-  eingebettete Systeme?
-
-
-### Weitere Informationen
-
-**[C](https://en.wikipedia.org/wiki/C_%28programming_language%29)/[C++](https://en.wikipedia.org/wiki/C%2B%2B):**
-
-                                       --{{0}}--
-Da im Bereich der Programmierung eingebetteter Systeme die Programmiersprache
-C/C++ vorherrscht, solltet ihr euch durch Tutorials, Bücher oder Videos
-entsprechend einarbeiten. Im speziellen sind Bitoperationen zur Bearbeitung der
-*nullten* Aufgabe, aber auch zur Programmierung von Mikrocontrollern im
-allgemeinen, hilfreich.
-
-
-* Tutorials: http://www.learncpp.com
-* Bücher: https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list
-* Videos: https://www.youtube.com/watch?v=Rub-JsjMhWY
-
-  !![C++Tutorial](https://www.youtube.com/embed/Rub-JsjMhWY)<!--
-    width: 560px;
-    height: 315px;
-  -->
-
-* Bitoperationen: https://de.wikipedia.org/wiki/Bitweiser_Operator
-
-
-**Eingebettete Programmierung:**
-
-                                       --{{1}}--
-Für Interessierte gibt es darüber hinaus auch Tutorials, die direkt auf die
-Programmierung eingebetteter Systeme eingehen. Für die Bearbeitung der Aufgaben
-solltet ihr sowohl das Datenblatt des Mikrocontrollers, als auch den
-Schaltbelegungsplan studieren.
-
-* Tutorials für eingebettet Systeme: https://www.mikrocontroller.net/articles/AVR-Tutorial
-* Arduino Serielle I/O Funktionen: https://www.arduino.cc/en/reference/Serial
-* Arduino Blink Beispiel: https://www.arduino.cc/en/Tutorial/Blink
-* circuits.io - Autodesk Circuits: https://circuits.io
-
-
-**PKeS:**
-
-* Datenblatt des AVR ATmega32U4: http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf
-* Schaltbelegungsplan: https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true
-* Arduinoview: https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md
-* ArduinoLib: https://github.com/fesselk/ArduinoviewLib
-
-
-### Problemstellung
-
-                                       --{{1}}--
-In der *nullten* praktischen Aufgabe sollt ihr zunächst eine LED auf dem Roboter
-zum Blinken bringen, bevor ihr mit Hilfe des Frameworks *Arduinoview* Daten des
-Mikrocontrollers visualisiert.
-
-**Teilaufgaben:**
-
-1. Lasst eine LED auf dem Roboter periodisch blinken.
-2. Nutzt *Arduinoview* um eine LED auf dem Roboter ein- und auszuschalten.
-3. Visualisiert Daten, die auf dem Mikrocontroller generiert wurden, mit Hilfe
-   von *Arduinoview*.
-
-
-#### Teilaufgabe 1
-
-                                       --{{0}}--
-In dieser Aufgabe sollt ihr zwei LEDs konfigurieren und sie unterschiedlich
-ansteuern.
-
-**Ziel:** Konfiguriert 2 LEDs und schaltet sie ein und aus.
-
-                                       --{{1}}--
-Im ersten Teilschritt konfiguriert ihr PIN 31 und einen weiteren PIN eurer Wahl,
-an dem eine LED angeschlossen ist (!), als Ausgang. Außerdem implementiert ihr
-eine Funktion um die LED an PIN 31 mit einer Periodendauer von 0.5 Sekunden
-blinken zu lassen.
-
-                                       --{{2}}--
-Im zweiten Teilschritt schaltet ihr das Blinken ein, nach dem der Benutzer eine
-entsprechende Eingabe durch die serielle Schnittstelle an den Mikrocontroller
-gesendet hat (z.B.: 'B' für 'Begin'). Sendet der Nutzer ein weiteres
-Zeichen (z.B.: 'S' für 'Stop') soll das Blinken beendet werden.
-
-**Teilschritte:**
-
-1. Konfiguriert den PIN 31 und einen weiteren PIN, an dem eine LED angeschlossen
-   ist, als Ausgang. Dies soll in der Funktion `setupLED()` geschehen.
-   Implementiert darüber hinaus die Funktion `blink()`, in der die LED, die an
-   `PIN 31` angeschlossen ist, ein- und wieder ausgeschaltet wird. Implementiert
-   eine Periodendauer von 0.5 Sekunden.
-
-2. Startet das Blinken nachdem der Nutzer ein entsprechendes Kommando über die
-   serielle Schnittstelle gesendet hat, z.B. ein 'B'. Stoppt das Verhalten, wenn
-   ein weiteres Kommando, z.Bsp. ein 'S', gesendet wird.
-
-
-#### Teilaufgabe 2
-
-**Ziel:** Nutzt *Arduinoview* zur Interaktion mit dem Nutzer und zum
-**Visualisieren von Daten.
-
-                                       --{{1}}--
-In der letzten Teilaufgabe habt ihr gelernt wie ihr einzelne PINs an dem
-Mikrocontroller zur Ausgabe von digitalen Signalen konfiguriert und eine
-einfache Interaktion mit dem Nutzer über die serielle Schnittstelle realisiert.
-
-                                       --{{2}}--
-In dieser Teilaufgabe soll das Verhalten des Mikrocontrollers erweitert werden.
-Diesesmal soll *Arduinoview* für die Interaktion genutzt werden.
-
-                                       --{{3}}--
-Im ersten Teilschritt sollt ihr dazu das Klicken auf den Button 'LED On/Off'
-nutzen, um die von euch gewählte LED, d.h. nicht die LED an PIN 31, ein- bzw.
-auszuschalten.
-
-                                       --{{4}}--
-Im zweiten Teilschritt fügt ihr der Visualisierung durch *Arduinoview* ein
-Diagramm hinzu.
-
-                                       --{{5}}--
-Das zuvor hinzugefügte Diagramm soll in dem dritten Teilschritt genutzt werden,
-um alle 500 ms neue Daten anzuzeigen. Die Daten, die angezeigt werden sollen,
-werden durch die bereits vorhandenen Funktionen `data0()` und `data1()`
-generiert. Ihr müsst lediglich die Funktion `sendValues()` implementieren, um die
-Daten an das erstellte Diagramm zu senden.
-
-                                       --{{6}}--
-Im letzten Teilschritt fügt ihr *Arduinoview* noch einen weiteren Button 'Graph
-On/Off' hinzu um die Visualisierung der Daten durch den Graphen ein- bzw.
-auszuschalten.
-
-**Teilschritte:**
-
-1. Nutzt den Button 'LED On/Off' um die zweite LED ein- bzw. auszuschalten.
-2. Generiert ein Diagramm mit Hilfe von *Arduinoview*.
-3. Visualisiert die Daten, die durch die Funktionen `data0()` und `data1()`
-   generiert werden, in dem neuen Diagramm. Alle 500 ms sollen neue Daten
-   gesendet werden.
-4. Fügt einen Button zum ein- und ausschalten des Sendens der Daten an das
-   Diagramm hinzu.
-
-
-## Quellcodeverständnis
-
-                                       --{{1}}--
-Nachdem ihr nun erste Erfahrungen mit der Implementierung eingebetteter Systeme
-sammeln konntet, haben wir noch ein paar kurze Fragen an euch, die ihr in 
-Vorbereitung der Abgabe der Aufgabe bei den Tutoren klären solltet:
-
-
-**Fragen zum Quellcode:**
-
-1. Welchen Nachteil hat die Funktion `delay([ms])`?
-
-   Stellt einen Programmablauf mit einer Funktionalität (z.B. nur das Blinken
-   der LED) mit einem Programmablauf mit mehreren Funktionalitäten (z.B. das
-   Blinken der LED zusammen mit dem Senden von Daten an das Diagramm) gegenüber.
-
-2. Welche Unterschiede ergeben sich software- und hardwareseitig, wenn ein PIN
-   als Ein- oder Ausgang konfiguriert wird?
-
-3. Was ist ein Baud?
-
-4. Wozu wird in der C/C++ Programmierung die `#include` Direktive verwendet und welche 
-   Gemeinsamkeiten/Unterschiede hat sie zu weiteren Befehlen; beispielsweise einem `#define`?
-   
 ## Quizze
 
 ### Macros 1
@@ -393,26 +769,28 @@ Welche Aussagen gelten für C-Macros?
     [[X]] Ist nur eine Textersetzung.
     [[ ]] Macros können genutzt werden um neue Macros zu erzeugen.
     [[ ]] `#include` ist kein Makro.
-    [[[
+********************************************************************************
 
-1. Ja, neben `#define` oder `#include` gibt es noch weitere Macrodirektiven.
-2. Nur der Präprozessor ersetzt Macros vor dem eigentlichen Kompilieren,
-3. dabei handelt es sich um eine reine Textersetzung.
-4. Diese wird nur einmalig durchgeführt, Rekursion oder Schleifen oder komplexere
-   Programmersetzungen (wie in Lisp, Elixir, etc.) sind nicht möglich.
-5. Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der
-   Unterschied zwischen den Angaben `"file1.h"` und `<file2.h>` liegt am
-   Speicherort der Datei. Erstere ist lokal im gleichen Verzeichnis und die
-   zweite in einem Systemverzeichnis.
+Ja, neben `#define` oder `#include` gibt es noch weitere Macrodirektiven.
 
+Nur der Präprozessor ersetzt Macros vor dem eigentlichen Kompilieren, dabei
+handelt es sich um eine reine Textersetzung. Diese wird nur einmalig
+durchgeführt, Rekursion oder Schleifen oder komplexere Programmersetzungen (wie
+in Lisp, Elixir, etc.) sind nicht möglich.
+
+Beim `#include` wird der Inhalt einer gesamten Datei eingesetzt. Der Unterschied
+zwischen den Angaben `"file1.h"` und `<file2.h>` liegt am Speicherort der Datei.
+Erstere ist lokal im gleichen Verzeichnis und die zweite in einem
+Systemverzeichnis.
 
 https://de.wikipedia.org/wiki/C-Pr%C3%A4prozessor
 
-]]]
+********************************************************************************
 
 ### Macros 2
 
-``` C
+
+``` c
 #define square(X) X*X
 
 square(3+2); // wie lautet das Ergebnis?
@@ -422,17 +800,15 @@ Wie sieht das Resultat der folgenden Quadrierung aus, bitte gib dein Ergebnis
 als Zahl in das folgende Textfeld ein:
 
     [[11]]
-    [[[
+********************************************************************************
+
 
 Das Ergebnis der Ersetzung ist `3+2*3+2` also ist hier die richtige Antwort 11
 und nicht 25. Probiert es einfach aus, wenn ihr es nicht glaubt. Ihr könnt ja
 noch für euch selber testen wie man das Macro anpassen muss, damit es das
-richtige Ergebnis liefert. Mit einem Doppel-Klick auf den Quell-Code wechselt
-ihr in den Editier-Modus und mit einem weiteren Doppel-Klick kommt ihr auch
-wieder heraus ;-)
+richtige Ergebnis liefert.
 
-
-```cpp
+``` c
 #include <iostream>
 using namespace std;
 
@@ -443,70 +819,9 @@ int main() {
     return 0;
 }
 ```
-<!--
-  var output = "";
-  JSCPP.run(`{X}`, "", {stdio: {write: s => { output += s.replace(/\n/g, "<br>");}}});
-  output;
--->
+@run_main(square)
 
-]]]
-
-
-### Ports
-
-Wie viele general purpose PORTs hat der verwendete Controller
-
-    [[ ]] 4
-    [[X]] 5
-    [[ ]] 6
-    [[ ]] 7
-    [[[
-
-Der Atmel ATmega32U4 hat 5 GPIO (General Purpose Input-Output) Interfaces - B, C,
-D, E und F. Interessanter Weise wird PORTA einfach ausgelassen. Probieren
-Sie mal aus für diesen die entsprechenden Register PINA oder PORTA zu beschreiben
-
-Handbuch Seite 4: Block Diagram
-
-]]]
-
-### DDRx Register
-
-Welche Aufgabe übernimmt das DDRx Register bei der Konfiguration bezüglich eines
-Pins?
-
-    [[X]] Festlegung des Zustandes (High, Low)
-    [[X]] Definition des Pins als Eingang oder Ausgang
-    [[ ]] Datenformat des Eingangs
-    [[ ]] Taktrate der Leseoperationen
-    [[ ]] Klassifikation der physischen Verfügbarkeit
-    [[[
-
-Der Name Data Directory Register ist Programm, die Bits dieser Register, die auf
-dem Controller für B, C, D, E und F existieren definieren die Richtung des
-Betriebs eines Pins (0 = Eingang, 1 = Ausgang).
-
-]]]
-
-### Widerstand
-
-Der elektrische Schaltplan zeigt das jede Diode LED 1-4 mit einem Widerstand
-verbunden ist. Was ist dessen Aufgabe?
-
-    [[ ]] Konfiguration des Farbprofils der Diode
-    [[X]] Beschränkung des Stromflusses durch die Diode
-    [[ ]] Filtern und Glätten von Störimpulsen
-    [[ ]] Galvanische Trennung des Prozessors von der Umgebung
-    [[[
-
-Als Faustformel kann für Standarddioden von einer maximal zulässigen Stromfluss
-von 20mA und einer Durchflussspannung von 2.2V ausgegangen werden. Unser
-Mikrocontroller wird mit 3.3V betrieben Der (überdimensionierte) Widerstand
-übernimmt die Begrenzung des Stromflusses durch die Diode und die weniger
-kritische Spannungsanpassung. Damit wird eine lange Lebensdauer garantiert.
-
-]]]
-
+********************************************************************************
 
 ### Serielle Schnittstelle
 
@@ -518,7 +833,7 @@ dieser Ausgaben für die finale Version abgeschaltet wird?
     [[X]] Verringert Stromaufnahme des Controllers
     [[ ]] Reduzierung der Programmgröße
     [[X]] Änderung des Zeitverhaltens des Programms
-    [[[
+*******************************************************************************
 
 Ein zu erwartendes Resultat, wenn die Serielle Schnittstelle vollständig
 abgeschaltet wird, ist die Verringerung der Stromaufnahme des Prozessor. Dazu
@@ -531,4 +846,44 @@ Prozessorleistung. Entsprechend ändert sich die Laufzeit des Programms, was in
 zeitkritischen Anwendungen bei "fragwürdiger" Programmierung zu einem gänzlich
 veränderten Verhalten führen kann.
 
-]]]
+*******************************************************************************
+
+
+## Umfrage ...
+
+Kommt nocht
+
+
+## Quellen
+
+__C und C++:__
+
+Im Kurssystem haben wir das Wikipedia Buch C-Programmierung für euch in ein
+interaktives LiaScript übersetzt, das könnt ihr als Referenzhandbuch nehmen und
+mit den aufgezeigten Beispielen experimentieren, das Buch durchsuchen oder
+einfach nur schmökern ;-)
+
+* Tutorials: http://www.learncpp.com
+* Bücher: https://stackoverflow.com/questions/388242/the-definitive-c-book-guide-and-list
+* Videos: https://www.youtube.com/watch?v=Rub-JsjMhWY
+* Bitoperationen: https://de.wikipedia.org/wiki/Bitweiser_Operator
+
+__Eingebettete Programmierung:__
+
+    --{{1}}--
+Für Interessierte gibt es darüber hinaus auch Tutorials, die direkt auf die
+Programmierung eingebetteter Systeme eingehen. Für die Bearbeitung der Aufgaben
+solltet ihr sowohl das Datenblatt des Mikrocontrollers, als auch den
+Schaltbelegungsplan studieren.
+
+* Tutorials für eingebettet Systeme: https://www.mikrocontroller.net/articles/AVR-Tutorial
+* Arduino Serielle I/O Funktionen: https://www.arduino.cc/en/reference/Serial
+* Arduino Blink Beispiel: https://www.arduino.cc/en/Tutorial/Blink
+* circuits.io - Autodesk Circuits: https://circuits.io
+
+__PKeS:__
+
+* Datenblatt des AVR ATmega32U4: http://www.atmel.com/Images/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf
+* Schaltbelegungsplan: https://github.com/liaScript/PKeS0/blob/master/materials/robubot_stud.pdf?raw=true
+* Arduinoview: https://github.com/fesselk/Arduinoview/blob/master/doc/Documetation.md
+* ArduinoviewLib: https://github.com/fesselk/ArduinoviewLib
