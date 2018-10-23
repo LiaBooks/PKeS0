@@ -1,15 +1,16 @@
 <!--
-author:   André Dietrich, Karl Fessel
+author:   Your Name
 
-email:    andre.dietrich@ovgu.de
+email:    your@mail.org
 
-version:  0.0.2
+version:  0.0.1
 
 language: de
 
 narrator: Deutsch Female
 
-comment:  Einführung in das eLab.
+comment:  Try to write a short comment about
+          your course, multiline is also okay.
 
 
 @run_main
@@ -55,10 +56,381 @@ send.service("@0", {start: "CodeRunner", settings: null})
 
 @end
 
+@compile_and_run
+<script>
+events.register("@0", e => {
+		if (!e.exit)
+    		send.lia("output", e.stdout);
+		else
+    		send.lia("eval",  "LIA: stop");
+});
+
+send.handle("input", (e) => {send.service("@0",  {input: e})});
+send.handle("stop",  (e) => {send.service("@0",  {stop: ""})});
+
+
+send.service("@0", {start: "CodeRunner", settings: null})
+.receive("ok", e => {
+		send.lia("output", e.message);
+
+		send.service("@0", {files: @4})
+		.receive("ok", e => {
+				send.lia("output", e.message);
+
+				send.service("@0",  {compile: @1, order: [@2]})
+				.receive("ok", e => {
+						send.lia("log", e.message, e.details, true);
+
+						send.service("@0",  {execute: @3})
+						.receive("ok", e => {
+								send.lia("output", e.message);
+								send.lia("eval", "LIA: terminal", [], false);
+						})
+						.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
+				})
+				.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
+		})
+		.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+})
+.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+
+"LIA: wait";
+</script>
+@end
+
+
+
+
+
+
+
+@sketch
+<script>
+events.register("@0mc_stdout", e => { send.lia("output", e); });
+events.register("@0mc_start", e => { send.lia("eval", "LIA: terminal"); });
+
+
+let compile = `arduino-builder -compile -logger=machine -hardware /usr/local/share/arduino/hardware -tools /usr/local/share/arduino/tools-builder -tools /usr/local/share/arduino/hardware/tools/avr -built-in-libraries /usr/local/share/arduino/libraries -libraries /usr/local/share/arduino/libraries -fqbn="Robubot Micro:avr:microbot" -ide-version=10807 -build-path $PWD/build -warnings=none -prefs=build.warn_data_percentage=100 -prefs=runtime.tools.avr-gcc.path=/usr/local/share/arduino/packages/arduino/tools/avr-gcc/4.8.1-arduino5/avr -prefs=runtime.tools.avr-gcc-4.8.1-arduino5.path=/usr/local/share/arduino/packages/arduino/tools/avr-gcc/4.8.1-arduino5/avr sketch/sketch.ino`;
+
+
+send.service("@0arduino", {start: "CodeRunner", settings: null})
+.receive("ok", e => {
+
+		send.lia("output", e.message);
+		send.service("@0arduino", {files: {"sketch/sketch.ino": `@input`, "build/": ""}})
+		.receive("ok", e => {
+
+				send.lia("output", e.message);
+				send.service("@0arduino",  {compile: compile, order: ["sketch.ino"]})
+				.receive("ok", e => {
+
+						send.lia("log", e.message, e.details, true);
+            if(!window["bot_selected"]) { send.lia("eval", "LIA: stop"); }
+            else {
+              send.service("c",
+                { connect: [["@0arduino", {"get_path": "build/sketch.ino.hex"}], ["@0mc", {"upload": null, "target": window["bot_selected"]}]]
+                }
+              );
+
+              send.handle("input", (e) => {
+                send.service("@0mc",  {id: "bot_stdin",
+                           action: "call",
+                           params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [0,  String.fromCharCode(0)+btoa(e) ] }})});
+
+              send.handle("stop",  (e) => {
+                send.service("@0mc", {id: "stdio0",
+                                   action: "unsubscribe",
+                                   params: {id: window["stdio0"], args: [] }});
+
+                send.service("@0mc", {id: "stdio1",
+                                   action: "unsubscribe",
+                                   params: {id: window["stdio1"], args: [] }});
+
+                send.service("@0mc",  {id: "bot_disconnect."+window["bot_selected"],
+                           action: "call",
+                           params: {procedure: "com.robulab.target.disconnect", args: [window["bot_selected"]] }})});
+            }
+				})
+				.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
+		})
+		.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+})
+.receive("error", e => { send.lia("output", e.message); send.lia("eval", "LIA: stop"); });
+
+"LIA: wait";
+</script>
+
+<script>
+function aduinoview_init() {
+
+  let arduino_view_frame = document.getElementById("@0arduinoviewer");
+
+  window["@0arduino_view_frame"] = arduino_view_frame;
+
+  @0arduino_view_frame.onload = function () {
+
+    @0arduino_view_frame.contentWindow.ArduinoView.init = function () {
+
+      @0arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
+
+        send.service("@0mc",  {id: "bot_stdin2",
+                   action: "call",
+                   params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [1,  String.fromCharCode(0)+btoa(e) ] }});
+      };
+
+      @0arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
+    };
+  };
+
+  @0arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
+
+    send.service("@0mc",  {id: "bot_stdin2",
+               action: "call",
+               params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [1,  String.fromCharCode(0)+btoa(e) ] }});
+  };
+
+  @0arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
+
+}
+
+function update() {
+  if(!window["bot_selected"]) {
+    for(let i=0; i<window.bot_list.length; i++) {
+      let btn = document.getElementById("button_"+window.bot_list[i].target);
+
+      if(btn === null) {
+        let cmdi = document.getElementById("bot_list");
+
+        btn = document.createElement("BUTTON");
+        btn.id = "button_" + window.bot_list[i].target;
+        btn.innerHTML = window.bot_list[i].name;
+        btn.onclick = function() {
+           let id = window.bot_list[i].target;
+
+           send.service("@0mc", {id: "bot_connect."+id,
+                      action: "call",
+                      params: {procedure: "com.robulab.target.connect", args: [id] }});
+         };
+
+         cmdi.appendChild(btn);
+         cmdi.appendChild(document.createTextNode(" "));
+      }
+
+      btn.style.backgroundColor = "";
+
+      if(window.bot_list[i].owner == ""){
+        btn.className = "lia-btn";
+        btn.disabled = false;
+      }
+      else {
+        btn.className = "lia-btn";
+        btn.disabled = true;
+      }
+    }
+  }
+  else {
+    for(let i=0; i<window.bot_list.length; i++) {
+      let btn = document.getElementById("button_"+window.bot_list[i].target);
+      if(window.bot_list[i].target == window["bot_selected"]){
+        btn.className = "lia-btn";
+        btn.disabled = false;
+        btn.style.backgroundColor = "#ADFF2F";
+      }
+      else {
+        btn.className = "lia-btn";
+        btn.disabled = true;
+      }
+    }
+  }
+}
+
+
+function subscriptions() {
+    if(!window["@0mc_subscribed"]) {
+        events.register("@0mc", e => {
+
+           if(typeof(e) === "undefined")
+              return;
+
+           if(!!e.subscription) {
+             if (e.subscription == "com.robulab.target.changed") {
+               let args = e.parameters.args;
+               for(let i=0; i<args.length; i++) {
+                 for(let j=0; j<window.bot_list.length; j++) {
+                   if(args[i].target == window.bot_list[j].target) {
+                     window.bot_list[j] = Object.assign(window.bot_list[j], args[i])
+                   }
+                 }
+               }
+               update();
+             } else if (e.subscription.endsWith(".0.raw_out")) {
+               events.dispatch("@0mc_stdout", String.fromCharCode.apply(this, e.parameters.args[0].data));
+             } else if (e.subscription.endsWith(".1.raw_out")) {
+               window["@0arduino_view_frame"].contentWindow.ArduinoView.onArduinoViewMessage(
+                 String.fromCharCode.apply(this, e.parameters.args[0].data)
+
+                 );
+             }
+           }
+
+           else if(e.id == "bot_list") {
+             window["bot_list"] = e.ok;
+             let cmdi = document.getElementById("bot_list");
+
+             for (let i = 0; i< window.bot_list.length; i++) {
+
+                let btn = document.createElement("BUTTON");
+                btn.id = "button_" + window.bot_list[i].target;
+                btn.innerHTML = window.bot_list[i].target;
+                btn.onclick = function() {
+                  let id = window.bot_list[i].target;
+
+                  send.service("@0mc", {id: "bot_connect."+id,
+                             action: "call",
+                             params: {procedure: "com.robulab.target.connect", args: [id] }});
+                };
+
+                cmdi.appendChild(btn);
+                cmdi.appendChild(document.createTextNode(" "));
+
+
+                send.service("@0mc", {id: "bot_name."+i,
+                             action: "call",
+                             params: {procedure: "com.robulab.target."+ window.bot_list[i].target +".get_name", args: [] }});
+             }
+             update();
+           }
+           else if( e.id.startsWith("bot_flash1") ) {
+             let [cmd, target, file] = e.id.split(" ");
+             send.service("@0mc", {upload: file, target: target, id: e.ok});
+           }
+           else if( e.id.startsWith("bot_flash2") ) {
+             let [cmd, target, id] = e.id.split(" ");
+             send.service("@0mc", {finish: parseInt(id), target: target});
+           }
+           else if ( e.id.startsWith("bot_flash3") && !e.ok ) {
+             let [cmd, target, id] = e.id.split(" ");
+
+             send.service("@0mc", {id: "bot_stdio.0.target",
+                                 action: "subscribe",
+                                 params: {topic: "com.robulab.target."+target+".0.raw_out", args: [] }});
+
+             send.service("@0mc", {id: "bot_stdio.1.target",
+                                 action: "subscribe",
+                                 params: {topic: "com.robulab.target."+target+".1.raw_out", args: [] }});
+
+             events.dispatch("@0mc_start", "");
+
+             aduinoview_init();
+           }
+
+           else if (e.id.startsWith("bot_stdio")) {
+              let [cmd, stdio, target] = e.id.split(".");
+              window["stdio"+stdio] = e.ok.id;
+           }
+
+           else if( e.id.startsWith("bot_name") ) {
+              let [cmd, id] = e.id.split(".")
+              window.bot_list[id]["name"] = e.ok;
+              document.getElementById("button_"+window.bot_list[id].target).innerHTML = e.ok;
+           }
+           else if( e.id.startsWith("bot_connect") ) {
+              let [cmd, target] = e.id.split(".");
+              window["bot_selected"] = target;
+              let btn = document.getElementById("button_"+target);
+              btn.onclick = function() {
+                  send.service("@0mc", {id: "bot_disconnect."+target,
+                             action: "call",
+                             params: {procedure: "com.robulab.target.disconnect", args: [target] }});
+              };
+              update();
+           }
+           else if( e.id.startsWith("bot_disconnect") ) {
+              let [cmd, target] = e.id.split(".");
+              delete window["bot_selected"];
+
+              let btn = document.getElementById("button_"+target)
+              btn.onclick = function() {
+                  send.service("@0mc", {id: "bot_connect."+target,
+                             action: "call",
+                             params: {procedure: "com.robulab.target.connect", args: [target] }});
+              };
+              update();
+           }
+        });
+
+        send.service("@0mc", {id: "bot_list",
+                            action: "call",
+                            params: {procedure: "com.robulab.target.get-online", args: [] }});
+
+        send.service("@0mc", {id: "bot_changes",
+                            action: "subscribe",
+                            params: {topic: "com.robulab.target.changed", args: [] }})
+
+        send.service("@0mc", {id: "bot_changes",
+                            action: "subscribe",
+                            params: {topic: "com.robulab.target.reregister", args: [] }})
+
+
+       window["@0mc_subscribed"] = true;
+   }
+};
+
+function login(silent=true) {
+    let cmdi = document.getElementById("mcInterface");
+
+    send.service("@0mc", {start: "MissionControl", settings: null})
+    .receive("ok", (e) => {
+        console.log("user-connected:", e);
+        cmdi.hidden = false;
+        window["mc_logged_in"] = true;
+
+        subscriptions();
+    })
+    .receive("error", (e) => {
+        form.hidden = false;
+        cmdi.hidden = true;
+        console.log("user-connected:", e);
+        alert("Fail: Please check your login!");
+    });
+};
+
+
+
+  if (!window.mc_logged_in) {
+    login();
+  }
+  else {
+    document.getElementById("mcInterface").hidden = false;
+    update();
+  }
+
+</script>
+
+
+<div id="mcInterface" hidden="true">
+  <span id="bot_list" ></span>
+
+  <span id="canvas" ></span>
+
+  <iframe id="@0arduinoviewer" style="width: 100%; min-height: 360px;" src="http://localhost:4000/arduinoview"></iframe>
+</div>
+@end
+
+
+@init_clear
+<script>
+  let cmdi = document.getElementById("mcInterface");
+  if(cmdi)
+    cmdi.hidden = true;
+</script>
+@end
 
 -->
 
 # PKES 0: Input & Output
+
+@init_clear
 
     --{{0}}--
 Willkommen bei dem eLearning-System eLab! Es wird euch bei der Bearbeitung der
@@ -81,6 +453,8 @@ Ziele:
 
 
 ## C-Programme
+
+@init_clear
 
     --{{0}}--
 Wir werden die Aufgaben ein wenig mischen. Um die wenigen Roboter nicht in Gänze
@@ -133,6 +507,8 @@ wechseln.
 
 ### Eingaben via `scanf`
 
+@init_clear
+
     --{{0}}--
 Wie man mit `printf` Ausgaben mit C generiert hast du ja bereits in teilen
 gesehen. Jetzt geht es darum, das Programm ein wenig zu erweitern.
@@ -165,6 +541,8 @@ int main()
 
 ## Arduino
 
+@init_clear
+
     --{{0}}--
 Wie du im unteren Code-Abschnitt siehst, so unterscheidet sich ein
 Arduino-Programm von einem Standard-C Programm einmal durch die Dateiendung
@@ -194,7 +572,7 @@ void loop() {
   delay(1000);        // delay in between reads for stability
 }
 ```
-@run_main(hallo_welt)
+@sketch(hallo_welt)
 
     --{{1}}--
 Unter dem Startknopf befinden sich mehrere Roboter die du zur Ausführung deines
@@ -216,13 +594,15 @@ höheren Durchsatz.
 
 ### Eingaben via `Serial.read`
 
+@init_clear
+
     --{{0}}--
 Das folgende Programm dient nur der Fingerübung und zeigt dir, wie du über die
 Serielle Schnittstelle mit dem System kommunizieren kannst. Versuch doch mal das
 Programm zu erweitern und ein Hallo-Welt Programm zu schreiben, das in mehreren
 Sprachen grüßt, in Abhänigkeit von deiner Eingabe.
 
-``` c
+``` c sketch.ino
 char receivedChar;
 boolean newData = false;
 
@@ -251,8 +631,13 @@ void showNewData() {
   }
 }
 ```
+@sketch(serial_read)
+
+
 
 ## Arduinoview
+
+@init_clear
 
     --{{0}}--
 Wenn wir schon über eine Weboberfläche programmieren, dann sollte es zumindest
@@ -267,7 +652,7 @@ nur Messergebnisse in Diagrammen analysieren könnt, sondern auch Buttons und
 Slider oder andere Elemente zur Steuerung eures Roboters nutzen könnt. Auf den
 folgenden Seiten erhaltet ihr einen Chrash-Kurs in der Nutzung von ArduinoView.
 
-````
+```
   _________________________                        _________________________
  |                         |      {Messages}      |                         |
  |      Application        |< - - - - - - - - - ->|   HTML5 & JavaScript    |
@@ -288,11 +673,13 @@ folgenden Seiten erhaltet ihr einen Chrash-Kurs in der Nutzung von ArduinoView.
  |                             Serial over WiFi                             |
  |__________________________________________________________________________|
 
-````
+```
 
 ArduinoView on Github: TODO
 
 ### Arduino -> ArduinoView
+
+@init_clear
 
     --{{0}}--
 ArduinoView kommuniziert, wie in der Grafik zuvor skizziert, in abgeschlossenen
@@ -376,6 +763,8 @@ Initialisierung der graphischen Bedienoberfläche gebunden werden.
 ```
 
 #### Shorthands
+
+@init_clear
 
 Beispiel Buttons:
 
@@ -483,6 +872,9 @@ them as values to be attached to the graph.
 
 ### Arduino <- ArduinoView
 
+@init_clear
+
+
     --{{0}}--
 Nachrichten von der Weboberfläche (ArduinoView) werden auf dem Arduino mittels
 der ArduinoView-Library als Callbacks interpretiert. Hierzu muss in `loop` die
@@ -532,6 +924,8 @@ endrunnerlist();
 
 ### Initialisierung der Kommunikation
 
+@init_clear
+
     --{{0}}--
 Im unteren Snippet ist dargestellt, welche Schritte noch zur Initialisierung von
 ArduinoView notwendig sind.
@@ -571,6 +965,8 @@ void setup() {
 
 ### Hallo
 
+@init_clear
+
     --{{0}}--
 Die Folgenden Seiten enthalten Kurze ausführbare Beispiele, mit denen du
 Experimentieren kannst um später komplexere Darstellungen und Interaktionen mit
@@ -597,7 +993,7 @@ Arduino goes HTML:
 #include <FrameStream.h>
 #include <Frameiterator.h>
 
-#define OUTPUT__BAUD_RATE 57600
+#define OUTPUT__BAUD_RATE 9600
 FrameStream frm(Serial1);
 
 // We do not have any interaction in this example, but a default
@@ -617,7 +1013,7 @@ void InitGUI(){
 }
 
 void setup() {
-  Serial.begin(OUTPUT__BAUD_RATE1);
+  Serial1.begin(OUTPUT__BAUD_RATE);
 
   //request reset of gui
   frm.print("!!");
@@ -630,7 +1026,7 @@ void loop() {
   frm.run();
 }
 ```
-<script>@input</script>
+@sketch(hallo1)
 
 #### Diagramm
 
@@ -640,7 +1036,7 @@ Extended Shorthands:
 #include <FrameStream.h>
 #include <Frameiterator.h>
 
-#define OUTPUT__BAUD_RATE 57600
+#define OUTPUT__BAUD_RATE 9600
 FrameStream frm(Serial1);
 
 beginrunnerlist();
@@ -673,6 +1069,7 @@ void loop() {
     delay(500);
 }
 ```
+@sketch(hallo2)
 
 #### Button
 
@@ -682,7 +1079,7 @@ Comunicating from Arduino -> Web -> Arduino
 #include <FrameStream.h>
 #include <Frameiterator.h>
 
-#define OUTPUT__BAUD_RATE 57600
+#define OUTPUT__BAUD_RATE 9600
 FrameStream frm(Serial1);
 
 // hierarchical runnerlist, that connects the gui elements with
@@ -749,14 +1146,16 @@ void loop() {
     while(frm.run());
 }
 ```
+@sketch(hallo3)
 
 ## Aufgabe 0
 
 Klick to switch on LED?
 
-```
+``` c todo.ino
 
 ```
+@sketch(todo)
 
 ## Quizze
 
@@ -809,13 +1208,10 @@ noch für euch selber testen wie man das Macro anpassen muss, damit es das
 richtige Ergebnis liefert.
 
 ``` c
-#include <iostream>
-using namespace std;
-
 #define square(X) X*X
 
 int main() {
-    cout << "square 3+2 = " << square(3+2) << endl;
+    printf("square 3+2 = %i\n", square(3+2));
     return 0;
 }
 ```
