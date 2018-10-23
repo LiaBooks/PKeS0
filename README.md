@@ -413,7 +413,7 @@ function login(silent=true) {
 
   <span id="canvas" ></span>
 
-  <iframe id="@0arduinoviewer" style="width: 100%; min-height: 360px;" src="http://localhost:4000/arduinoview"></iframe>
+  <iframe id="@0arduinoviewer" style="width: 100%; min-height: 360px;" src="https://elab.ovgu.robulab.com/arduinoview"></iframe>
 </div>
 @end
 
