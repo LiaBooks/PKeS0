@@ -388,7 +388,6 @@ function login(silent=true) {
         subscriptions();
     })
     .receive("error", (e) => {
-        form.hidden = false;
         cmdi.hidden = true;
         console.log("user-connected:", e);
         alert("Fail: Please check your login!");
