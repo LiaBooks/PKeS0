@@ -1032,7 +1032,7 @@ void loop() {
 
 Extended Shorthands:
 
-``` c
+``` c diagram.ino
 #include <FrameStream.h>
 #include <Frameiterator.h>
 
@@ -1075,7 +1075,7 @@ void loop() {
 
 Comunicating from Arduino -> Web -> Arduino
 
-``` c
+``` c button.ino
 #include <FrameStream.h>
 #include <Frameiterator.h>
 
