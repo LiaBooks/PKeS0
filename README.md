@@ -674,7 +674,8 @@ folgenden Seiten erhaltet ihr einen Chrash-Kurs in der Nutzung von ArduinoView.
 
 ```
 
-ArduinoView on Github: TODO
+Github-Web: https://github.com/fesselk/Arduinoview
+Gitlab-Lib: https://gitlab.com/OvGU-ESS/arduinoview
 
 ### Arduino -> ArduinoView
 
@@ -975,7 +976,7 @@ deinem Roboter zu implementieren
 2. Eye-Candy-Diagrams
 3. Wahoo-Super-Buttons
 
-Weitere Beispiele findest du unter: TODO
+Weitere Beispiele findest du unter: https://gitlab.com/OvGU-ESS/arduinoview/tree/master/libraries/Arduinoview/examples
 
 #### ArduinoView
 
