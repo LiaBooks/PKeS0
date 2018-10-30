@@ -106,8 +106,8 @@ send.service("@0", {start: "CodeRunner", settings: null})
 
 @sketch
 <script>
-events.register("@0mc_stdout", e => { send.lia("output", e); });
-events.register("@0mc_start", e => { send.lia("eval", "LIA: terminal"); });
+events.register("mc_stdout", e => { send.lia("output", e); });
+events.register("mc_start", e => { send.lia("eval", "LIA: terminal"); });
 
 
 let compile = `arduino-builder -compile -logger=machine -hardware /usr/local/share/arduino/hardware -tools /usr/local/share/arduino/tools-builder -tools /usr/local/share/arduino/hardware/tools/avr -built-in-libraries /usr/local/share/arduino/libraries -libraries /usr/local/share/arduino/libraries -fqbn="Robubot Micro:avr:microbot" -ide-version=10807 -build-path $PWD/build -warnings=none -prefs=build.warn_data_percentage=100 -prefs=runtime.tools.avr-gcc.path=/usr/local/share/arduino/packages/arduino/tools/avr-gcc/4.8.1-arduino5/avr -prefs=runtime.tools.avr-gcc-4.8.1-arduino5.path=/usr/local/share/arduino/packages/arduino/tools/avr-gcc/4.8.1-arduino5/avr sketch/sketch.ino`;
@@ -128,25 +128,25 @@ send.service("@0arduino", {start: "CodeRunner", settings: null})
             if(!window["bot_selected"]) { send.lia("eval", "LIA: stop"); }
             else {
               send.service("c",
-                { connect: [["@0arduino", {"get_path": "build/sketch.ino.hex"}], ["@0mc", {"upload": null, "target": window["bot_selected"]}]]
+                { connect: [["@0arduino", {"get_path": "build/sketch.ino.hex"}], ["mc", {"upload": null, "target": window["bot_selected"]}]]
                 }
               );
 
               send.handle("input", (e) => {
-                send.service("@0mc",  {id: "bot_stdin",
+                send.service("mc",  {id: "bot_stdin",
                            action: "call",
                            params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [0,  String.fromCharCode(0)+btoa(e) ] }})});
 
               send.handle("stop",  (e) => {
-                send.service("@0mc", {id: "stdio0",
+                send.service("mc", {id: "stdio0",
                                    action: "unsubscribe",
                                    params: {id: window["stdio0"], args: [] }});
 
-                send.service("@0mc", {id: "stdio1",
+                send.service("mc", {id: "stdio1",
                                    action: "unsubscribe",
                                    params: {id: window["stdio1"], args: [] }});
 
-                send.service("@0mc",  {id: "bot_disconnect."+window["bot_selected"],
+                send.service("mc",  {id: "bot_disconnect."+window["bot_selected"],
                            action: "call",
                            params: {procedure: "com.robulab.target.disconnect", args: [window["bot_selected"]] }})});
             }
@@ -163,33 +163,33 @@ send.service("@0arduino", {start: "CodeRunner", settings: null})
 <script>
 function aduinoview_init() {
 
-  let arduino_view_frame = document.getElementById("@0arduinoviewer");
+  let arduino_view_frame = document.getElementById("arduinoviewer");
 
-  window["@0arduino_view_frame"] = arduino_view_frame;
+  window["arduino_view_frame"] = arduino_view_frame;
 
-  @0arduino_view_frame.onload = function () {
+  arduino_view_frame.onload = function () {
 
-    @0arduino_view_frame.contentWindow.ArduinoView.init = function () {
+    arduino_view_frame.contentWindow.ArduinoView.init = function () {
 
-      @0arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
+      arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
 
-        send.service("@0mc",  {id: "bot_stdin2",
+        send.service("mc",  {id: "bot_stdin2",
                    action: "call",
                    params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [1,  String.fromCharCode(0)+btoa(e) ] }});
       };
 
-      @0arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
+      arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
     };
   };
 
-  @0arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
+  arduino_view_frame.contentWindow.ArduinoView.sendMessage = function(e) {
 
-    send.service("@0mc",  {id: "bot_stdin2",
+    send.service("mc",  {id: "bot_stdin2",
                action: "call",
                params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [1,  String.fromCharCode(0)+btoa(e) ] }});
   };
 
-  @0arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
+  arduino_view_frame.contentWindow.ArduinoView.onInputPermissionChanged(true);
 
 }
 
@@ -207,7 +207,7 @@ function update() {
         btn.onclick = function() {
            let id = window.bot_list[i].target;
 
-           send.service("@0mc", {id: "bot_connect."+id,
+           send.service("mc", {id: "bot_connect."+id,
                       action: "call",
                       params: {procedure: "com.robulab.target.connect", args: [id] }});
          };
@@ -246,163 +246,155 @@ function update() {
 
 
 function subscriptions() {
-    if(!window["@0mc_subscribed"]) {
-        events.register("@0mc", e => {
+    events.register("mc", e => {
+       if(typeof(e) === "undefined")
+          return;
 
-           if(typeof(e) === "undefined")
-              return;
-
-           if(!!e.subscription) {
-             if (e.subscription == "com.robulab.target.changed") {
-               let args = e.parameters.args;
-               for(let i=0; i<args.length; i++) {
-                 for(let j=0; j<window.bot_list.length; j++) {
-                   if(args[i].target == window.bot_list[j].target) {
-                     window.bot_list[j] = Object.assign(window.bot_list[j], args[i])
-                   }
-                 }
+       if(!!e.subscription) {
+         if (e.subscription == "com.robulab.target.changed") {
+           let args = e.parameters.args;
+           for(let i=0; i<args.length; i++) {
+             for(let j=0; j<window.bot_list.length; j++) {
+               if(args[i].target == window.bot_list[j].target) {
+                 window.bot_list[j] = Object.assign(window.bot_list[j], args[i])
                }
-               update();
-             } else if (e.subscription.endsWith(".0.raw_out")) {
-               events.dispatch("@0mc_stdout", String.fromCharCode.apply(this, e.parameters.args[0].data));
-             } else if (e.subscription.endsWith(".1.raw_out")) {
-               window["@0arduino_view_frame"].contentWindow.ArduinoView.onArduinoViewMessage(
-                 String.fromCharCode.apply(this, e.parameters.args[0].data)
-
-                 );
              }
            }
+           update();
+         } else if (e.subscription.endsWith(".0.raw_out")) {
+           events.dispatch("mc_stdout", String.fromCharCode.apply(this, e.parameters.args[0].data));
+         } else if (e.subscription.endsWith(".1.raw_out")) {
+           window["arduino_view_frame"].contentWindow.ArduinoView.onArduinoViewMessage(
+             String.fromCharCode.apply(this, e.parameters.args[0].data) );
+         }
+       }
+       else if(e.id == "bot_list") {
+         window["bot_list"] = e.ok;
+         let cmdi = document.getElementById("bot_list");
 
-           else if(e.id == "bot_list") {
-             window["bot_list"] = e.ok;
-             let cmdi = document.getElementById("bot_list");
+         for (let i = 0; i< window.bot_list.length; i++) {
+            let btn = document.createElement("BUTTON");
+            btn.id = "button_" + window.bot_list[i].target;
+            btn.innerHTML = window.bot_list[i].target;
+            btn.onclick = function() {
+              let id = window.bot_list[i].target;
 
-             for (let i = 0; i< window.bot_list.length; i++) {
+              send.service("mc", {id: "bot_connect."+id,
+                           action: "call",
+                          params: {procedure: "com.robulab.target.connect", args: [id] }});
+              };
 
-                let btn = document.createElement("BUTTON");
-                btn.id = "button_" + window.bot_list[i].target;
-                btn.innerHTML = window.bot_list[i].target;
-                btn.onclick = function() {
-                  let id = window.bot_list[i].target;
+              cmdi.appendChild(btn);
+              cmdi.appendChild(document.createTextNode(" "));
 
-                  send.service("@0mc", {id: "bot_connect."+id,
-                             action: "call",
-                             params: {procedure: "com.robulab.target.connect", args: [id] }});
-                };
-
-                cmdi.appendChild(btn);
-                cmdi.appendChild(document.createTextNode(" "));
-
-
-                send.service("@0mc", {id: "bot_name."+i,
-                             action: "call",
-                             params: {procedure: "com.robulab.target."+ window.bot_list[i].target +".get_name", args: [] }});
+              send.service("mc", {id: "bot_name."+i,
+                           action: "call",
+                           params: {procedure: "com.robulab.target."+ window.bot_list[i].target +".get_name", args: [] }});
              }
-             update();
-           }
-           else if( e.id.startsWith("bot_flash1") ) {
-             let [cmd, target, file] = e.id.split(" ");
-             send.service("@0mc", {upload: file, target: target, id: e.ok});
-           }
-           else if( e.id.startsWith("bot_flash2") ) {
-             let [cmd, target, id] = e.id.split(" ");
-             send.service("@0mc", {finish: parseInt(id), target: target});
-           }
-           else if ( e.id.startsWith("bot_flash3") && !e.ok ) {
-             let [cmd, target, id] = e.id.split(" ");
+           update();
+         }
+         else if( e.id.startsWith("bot_flash1") ) {
+           let [cmd, target, file] = e.id.split(" ");
+           send.service("mc", {upload: file, target: target, id: e.ok});
+         }
+         else if( e.id.startsWith("bot_flash2") ) {
+           let [cmd, target, id] = e.id.split(" ");
+           send.service("mc", {finish: parseInt(id), target: target});
+         }
+         else if ( e.id.startsWith("bot_flash3") && !e.ok ) {
+           aduinoview_init();
+           let [cmd, target, id] = e.id.split(" ");
 
-             send.service("@0mc", {id: "bot_stdio.0.target",
-                                 action: "subscribe",
-                                 params: {topic: "com.robulab.target."+target+".0.raw_out", args: [] }});
+           send.service("mc", {id: "bot_stdio.0.target",
+                               action: "subscribe",
+                               params: {topic: "com.robulab.target."+target+".0.raw_out", args: [] }});
 
-             send.service("@0mc", {id: "bot_stdio.1.target",
-                                 action: "subscribe",
-                                 params: {topic: "com.robulab.target."+target+".1.raw_out", args: [] }});
+           send.service("mc", {id: "bot_stdio.1.target",
+                               action: "subscribe",
+                               params: {topic: "com.robulab.target."+target+".1.raw_out", args: [] }});
 
-             events.dispatch("@0mc_start", "");
+           events.dispatch("mc_start", "");
 
-             aduinoview_init();
-           }
 
-           else if (e.id.startsWith("bot_stdio")) {
-              let [cmd, stdio, target] = e.id.split(".");
-              window["stdio"+stdio] = e.ok.id;
-           }
+        }
 
-           else if( e.id.startsWith("bot_name") ) {
-              let [cmd, id] = e.id.split(".")
-              window.bot_list[id]["name"] = e.ok;
-              document.getElementById("button_"+window.bot_list[id].target).innerHTML = e.ok;
-           }
-           else if( e.id.startsWith("bot_connect") ) {
-              let [cmd, target] = e.id.split(".");
-              window["bot_selected"] = target;
-              let btn = document.getElementById("button_"+target);
-              btn.onclick = function() {
-                  send.service("@0mc", {id: "bot_disconnect."+target,
-                             action: "call",
-                             params: {procedure: "com.robulab.target.disconnect", args: [target] }});
-              };
-              update();
-           }
-           else if( e.id.startsWith("bot_disconnect") ) {
-              let [cmd, target] = e.id.split(".");
-              delete window["bot_selected"];
+        else if (e.id.startsWith("bot_stdio")) {
+          let [cmd, stdio, target] = e.id.split(".");
+          window["stdio"+stdio] = e.ok.id;
+        }
 
-              let btn = document.getElementById("button_"+target)
-              btn.onclick = function() {
-                  send.service("@0mc", {id: "bot_connect."+target,
-                             action: "call",
-                             params: {procedure: "com.robulab.target.connect", args: [target] }});
-              };
-              update();
-           }
-        });
+        else if( e.id.startsWith("bot_name") ) {
+          let [cmd, id] = e.id.split(".")
+          window.bot_list[id]["name"] = e.ok;
+          document.getElementById("button_"+window.bot_list[id].target).innerHTML = e.ok;
+        }
 
-        send.service("@0mc", {id: "bot_list",
+        else if( e.id.startsWith("bot_connect") ) {
+          let [cmd, target] = e.id.split(".");
+          window["bot_selected"] = target;
+          let btn = document.getElementById("button_"+target);
+          btn.onclick = function() {
+              send.service("mc", {id: "bot_disconnect."+target,
+                         action: "call",
+                         params: {procedure: "com.robulab.target.disconnect", args: [target] }});
+          };
+          update();
+        }
+        else if( e.id.startsWith("bot_disconnect") ) {
+          let [cmd, target] = e.id.split(".");
+          delete window["bot_selected"];
+
+          let btn = document.getElementById("button_"+target)
+          btn.onclick = function() {
+              send.service("mc", {id: "bot_connect."+target,
+                         action: "call",
+                         params: {procedure: "com.robulab.target.connect", args: [target] }});
+          };
+          update();
+        }
+      });
+
+      send.service("mc", {id: "bot_list",
                             action: "call",
                             params: {procedure: "com.robulab.target.get-online", args: [] }});
 
-        send.service("@0mc", {id: "bot_changes",
+      send.service("mc", {id: "bot_changes",
                             action: "subscribe",
                             params: {topic: "com.robulab.target.changed", args: [] }})
 
-        send.service("@0mc", {id: "bot_changes",
+      send.service("mc", {id: "bot_changes",
                             action: "subscribe",
                             params: {topic: "com.robulab.target.reregister", args: [] }})
 
 
-       window["@0mc_subscribed"] = true;
-   }
+      window["mc_subscribed"] = true;
+
 };
 
 function login(silent=true) {
     let cmdi = document.getElementById("mcInterface");
 
-    send.service("@0mc", {start: "MissionControl", settings: null})
-    .receive("ok", (e) => {
-        console.log("user-connected:", e);
-        cmdi.hidden = false;
-        window["mc_logged_in"] = true;
-
-        subscriptions();
-    })
-    .receive("error", (e) => {
-        cmdi.hidden = true;
-        console.log("user-connected:", e);
-        alert("Fail: Please check your login!");
-    });
+    send.service("mc", {start: "MissionControl", settings: null})
+      .receive("ok", (e) => {
+          console.log("user-connected:", e);
+          cmdi.hidden = false;
+          window["mc_logged_in"] = true;
+          subscriptions();
+      })
+      .receive("error", (e) => {
+          cmdi.hidden = true;
+          console.log("Error user-connected:", e);
+          alert("Fail: Please check your login!");
+      });
 };
 
-
-
-  if (!window.mc_logged_in) {
-    login();
-  }
-  else {
-    document.getElementById("mcInterface").hidden = false;
-    update();
-  }
+if (!window.mc_logged_in) {
+  setTimeout((e) => { login() }, 300);
+}
+else {
+  document.getElementById("mcInterface").hidden = false;
+  update();
+}
 
 </script>
 
@@ -412,7 +404,7 @@ function login(silent=true) {
 
   <span id="canvas" ></span>
 
-  <iframe id="@0arduinoviewer" style="width: 100%; min-height: 360px;" src="https://elab.ovgu.robulab.com/arduinoview"></iframe>
+  <iframe id="arduinoviewer" style="width: 100%; min-height: 360px;" src="https://elab.ovgu.robulab.com/arduinoview"></iframe>
 </div>
 @end
 
@@ -422,8 +414,21 @@ function login(silent=true) {
   let cmdi = document.getElementById("mcInterface");
   if(cmdi)
     cmdi.hidden = true;
+
+  let viewer = document.getElementById("arduinoviewer");
+  if(viewer)
+    try {
+    //  viewer.contentWindow.document.body.innerHTML = ""
+    } catch(e) {}
+
+  if(window.bot_selected) {
+    send.service("mc", {id: "bot_disconnect."+window.bot_selected,
+             action: "call",
+             params: {procedure: "com.robulab.target.disconnect", args: [window.bot_selected] }});
+  }
 </script>
 @end
+
 
 -->
 
@@ -1030,6 +1035,8 @@ void loop() {
 
 #### Diagramm
 
+@init_clear
+
 Extended Shorthands:
 
 ``` c diagram.ino
@@ -1072,6 +1079,8 @@ void loop() {
 @sketch(hallo2)
 
 #### Button
+
+@init_clear
 
 Comunicating from Arduino -> Web -> Arduino
 
@@ -1150,6 +1159,8 @@ void loop() {
 
 ## Aufgabe 0
 
+@init_clear
+
 Klick to switch on LED?
 
 ``` c todo.ino
@@ -1159,7 +1170,11 @@ Klick to switch on LED?
 
 ## Quizze
 
+@init_clear
+
 ### Macros 1
+
+@init_clear
 
 Welche Aussagen gelten für C-Macros?
 
@@ -1188,6 +1203,7 @@ https://de.wikipedia.org/wiki/C-Pr%C3%A4prozessor
 
 ### Macros 2
 
+@init_clear
 
 ``` c
 #define square(X) X*X
@@ -1221,6 +1237,8 @@ int main() {
 
 ### Serielle Schnittstelle
 
+@init_clear
+
 Ausgaben über die serielle Schnittstelle werden bei eingebetteten Systemen
 häufig für das Debugging genutzt. Was sind die Konsequenzen, wenn das Schreiben
 dieser Ausgaben für die finale Version abgeschaltet wird?
@@ -1246,6 +1264,8 @@ veränderten Verhalten führen kann.
 
 
 ## Umfrage?
+
+@init_clear
 
 Inwieweit stimmen Sie folgenden Aussagen zu dieser Übung zu ( von 1 für
 "_stimme gar nicht zu_" bis 5 für "_stimme voll zu_"):
@@ -1274,6 +1294,8 @@ Um die Aufgabe bearbeiten zu können ...
     [ ] ... benötigte ich Unterstützung durch Kommilitonen
 
 ## Quellen
+
+@init_clear
 
 __C und C++:__
 
