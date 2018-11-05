@@ -127,6 +127,8 @@ send.service("@0arduino", {start: "CodeRunner", settings: null})
 						send.lia("log", e.message, e.details, true);
             if(!window["bot_selected"]) { send.lia("eval", "LIA: stop"); }
             else {
+              document.getElementById("button_"+window.bot_selected).disabled = true;
+
               send.service("c",
                 { connect: [["@0arduino", {"get_path": "build/sketch.ino.hex"}], ["mc", {"upload": null, "target": window["bot_selected"]}]]
                 }
@@ -138,6 +140,8 @@ send.service("@0arduino", {start: "CodeRunner", settings: null})
                            params: {procedure: "com.robulab.target."+window["bot_selected"]+".send_input", args: [0,  String.fromCharCode(0)+btoa(e) ] }})});
 
               send.handle("stop",  (e) => {
+                document.getElementById("button_"+window.bot_selected).disabled = false;
+
                 send.service("mc", {id: "stdio0",
                                    action: "unsubscribe",
                                    params: {id: window["stdio0"], args: [] }});
@@ -149,6 +153,9 @@ send.service("@0arduino", {start: "CodeRunner", settings: null})
                 send.service("mc",  {id: "bot_disconnect."+window["bot_selected"],
                            action: "call",
                            params: {procedure: "com.robulab.target.disconnect", args: [window["bot_selected"]] }})});
+
+                delete window.stdio0;
+                delete window.stdio1;
             }
 				})
 				.receive("error", e => { send.lia("log", e.message, e.details, false); send.lia("eval", "LIA: stop"); });
@@ -396,6 +403,26 @@ else {
   update();
 }
 
+window.addEventListener("beforeunload", function (event) {
+    if ( window.stdio1 ) {
+          send.service("mc", {id: "stdio1",
+                       action: "unsubscribe",
+                       params: {id: window["stdio1"], args: [] }});
+    }
+
+    if ( window.stdio0 ) {
+          send.service("mc", {id: "stdio0",
+                       action: "unsubscribe",
+                       params: {id: window["stdio0"], args: [] }});
+    }
+
+    if(window.bot_selected) {
+        send.service("mc",  {id: "bot_disconnect."+window["bot_selected"],
+                            action: "call",
+                            params: {procedure: "com.robulab.target.disconnect", args: [window["bot_selected"]] }});
+    }
+});
+
 </script>
 
 
@@ -411,9 +438,9 @@ else {
 
 @init_clear
 <script>
-  let cmdi = document.getElementById("mcInterface");
-  if(cmdi)
-    cmdi.hidden = true;
+let cmdi = document.getElementById("mcInterface");
+if(cmdi)
+  cmdi.hidden = true;
 
   let viewer = document.getElementById("arduinoviewer");
   if(viewer)
@@ -421,10 +448,22 @@ else {
     //  viewer.contentWindow.document.body.innerHTML = ""
     } catch(e) {}
 
+  if ( window.stdio1 ) {
+          send.service("mc", {id: "stdio1",
+                       action: "unsubscribe",
+                       params: {id: window["stdio1"], args: [] }});
+  }
+
+  if ( window.stdio0 ) {
+          send.service("mc", {id: "stdio0",
+                       action: "unsubscribe",
+                       params: {id: window["stdio0"], args: [] }});
+  }
+
   if(window.bot_selected) {
-    send.service("mc", {id: "bot_disconnect."+window.bot_selected,
-             action: "call",
-             params: {procedure: "com.robulab.target.disconnect", args: [window.bot_selected] }});
+        send.service("mc",  {id: "bot_disconnect."+window["bot_selected"],
+                   action: "call",
+                   params: {procedure: "com.robulab.target.disconnect", args: [window["bot_selected"]] }});
   }
 </script>
 @end
